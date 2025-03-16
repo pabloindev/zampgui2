@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZampGUI2", "ZampGUI2\ZampGUI2.csproj", "{0FBD8FC7-5FBB-45E6-B484-7206ACA7FBEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZampGUI2_Run", "ZampGUI2_Run\ZampGUI2_Run.csproj", "{F01031B9-502A-4B0C-A3C3-E911888E8CAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0FBD8FC7-5FBB-45E6-B484-7206ACA7FBEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FBD8FC7-5FBB-45E6-B484-7206ACA7FBEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FBD8FC7-5FBB-45E6-B484-7206ACA7FBEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FBD8FC7-5FBB-45E6-B484-7206ACA7FBEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F01031B9-502A-4B0C-A3C3-E911888E8CAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F01031B9-502A-4B0C-A3C3-E911888E8CAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F01031B9-502A-4B0C-A3C3-E911888E8CAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F01031B9-502A-4B0C-A3C3-E911888E8CAA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {542DDBAB-476C-4EB8-96F1-0FF3F0617633}
+	EndGlobalSection
+EndGlobal
