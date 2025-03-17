@@ -17,9 +17,9 @@ namespace ZampGUI2.helper
     {
         IniFile config;
         Percorsi percorsi;
-        Form1 form;
+        FormMain form;
 
-        public Helper(IniFile config, Form1 form)
+        public Helper(IniFile config, FormMain form)
         {
             this.config = config;
             this.percorsi = new Percorsi(config);
@@ -280,6 +280,7 @@ namespace ZampGUI2.helper
                         { "PATH", percorsi.apache_bin + ";" + Environment.GetEnvironmentVariable("PATH") },
                         { "ZAMPGUI_PATH", percorsi.pathBase },
                         { "PHPIniDir", percorsi.php_path },
+                        { "CURRENT_VERS", config.Read("FolderName", "currentvers") },
                         { "HTTP_PORT", config.Read("Porte", "httpPort") }
                     };
                     pathprocesso = Path.Combine(percorsi.apache_bin, nome_processo + ".exe");

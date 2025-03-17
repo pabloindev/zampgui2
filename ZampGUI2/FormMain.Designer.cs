@@ -2,7 +2,7 @@
 
 namespace ZampGUI2
 {
-    partial class Form1
+    partial class FormMain
     {
         /// <summary>
         ///  Required designer variable.
@@ -30,12 +30,13 @@ namespace ZampGUI2
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             menuStrip1 = new MenuStrip();
             serverToolStripMenuItem1 = new ToolStripMenuItem();
             editHTTPPortToolStripMenuItem = new ToolStripMenuItem();
             changeDefaultEditorToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
+            changeVersionApachePHPToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
             apacheHttpdToolStripMenuItem = new ToolStripMenuItem();
             apacheHttpdvhostsconfToolStripMenuItem = new ToolStripMenuItem();
@@ -92,15 +93,15 @@ namespace ZampGUI2
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(5, 2, 0, 2);
-            menuStrip1.Size = new Size(915, 28);
+            menuStrip1.Size = new Size(915, 24);
             menuStrip1.TabIndex = 2;
             menuStrip1.Text = "menuStrip1";
             // 
             // serverToolStripMenuItem1
             // 
-            serverToolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { editHTTPPortToolStripMenuItem, changeDefaultEditorToolStripMenuItem, exitToolStripMenuItem });
+            serverToolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { editHTTPPortToolStripMenuItem, changeDefaultEditorToolStripMenuItem, changeVersionApachePHPToolStripMenuItem, exitToolStripMenuItem });
             serverToolStripMenuItem1.Name = "serverToolStripMenuItem1";
-            serverToolStripMenuItem1.Size = new Size(71, 24);
+            serverToolStripMenuItem1.Size = new Size(55, 20);
             serverToolStripMenuItem1.Text = "Server";
             // 
             // editHTTPPortToolStripMenuItem
@@ -108,7 +109,7 @@ namespace ZampGUI2
             editHTTPPortToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             editHTTPPortToolStripMenuItem.ForeColor = Color.White;
             editHTTPPortToolStripMenuItem.Name = "editHTTPPortToolStripMenuItem";
-            editHTTPPortToolStripMenuItem.Size = new Size(248, 26);
+            editHTTPPortToolStripMenuItem.Size = new Size(243, 22);
             editHTTPPortToolStripMenuItem.Text = "Edit HTTP Port";
             editHTTPPortToolStripMenuItem.Click += editHTTPPortToolStripMenuItem_Click;
             // 
@@ -117,7 +118,7 @@ namespace ZampGUI2
             changeDefaultEditorToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             changeDefaultEditorToolStripMenuItem.ForeColor = Color.White;
             changeDefaultEditorToolStripMenuItem.Name = "changeDefaultEditorToolStripMenuItem";
-            changeDefaultEditorToolStripMenuItem.Size = new Size(248, 26);
+            changeDefaultEditorToolStripMenuItem.Size = new Size(243, 22);
             changeDefaultEditorToolStripMenuItem.Text = "Change default editor";
             changeDefaultEditorToolStripMenuItem.Click += changeDefaultEditorToolStripMenuItem_Click;
             // 
@@ -126,16 +127,25 @@ namespace ZampGUI2
             exitToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             exitToolStripMenuItem.ForeColor = Color.White;
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(248, 26);
+            exitToolStripMenuItem.Size = new Size(243, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+            // 
+            // changeVersionApachePHPToolStripMenuItem
+            // 
+            changeVersionApachePHPToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
+            changeVersionApachePHPToolStripMenuItem.ForeColor = Color.White;
+            changeVersionApachePHPToolStripMenuItem.Name = "changeVersionApachePHPToolStripMenuItem";
+            changeVersionApachePHPToolStripMenuItem.Size = new Size(243, 22);
+            changeVersionApachePHPToolStripMenuItem.Text = "Change Version Apache/PHP";
+            changeVersionApachePHPToolStripMenuItem.Click += changeVersionApachePHPToolStripMenuItem_Click;
             // 
             // editToolStripMenuItem
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { apacheHttpdToolStripMenuItem, apacheHttpdvhostsconfToolStripMenuItem, phpiniToolStripMenuItem, mariadbiniToolStripMenuItem, hostsFileToolStripMenuItem });
             editToolStripMenuItem.ForeColor = Color.White;
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(51, 24);
+            editToolStripMenuItem.Size = new Size(42, 20);
             editToolStripMenuItem.Text = "Edit";
             // 
             // apacheHttpdToolStripMenuItem
@@ -143,7 +153,7 @@ namespace ZampGUI2
             apacheHttpdToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             apacheHttpdToolStripMenuItem.ForeColor = Color.White;
             apacheHttpdToolStripMenuItem.Name = "apacheHttpdToolStripMenuItem";
-            apacheHttpdToolStripMenuItem.Size = new Size(274, 26);
+            apacheHttpdToolStripMenuItem.Size = new Size(218, 22);
             apacheHttpdToolStripMenuItem.Text = "apache httpd.conf";
             apacheHttpdToolStripMenuItem.Click += apacheHttpdToolStripMenuItem_Click;
             // 
@@ -152,7 +162,7 @@ namespace ZampGUI2
             apacheHttpdvhostsconfToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             apacheHttpdvhostsconfToolStripMenuItem.ForeColor = Color.White;
             apacheHttpdvhostsconfToolStripMenuItem.Name = "apacheHttpdvhostsconfToolStripMenuItem";
-            apacheHttpdvhostsconfToolStripMenuItem.Size = new Size(274, 26);
+            apacheHttpdvhostsconfToolStripMenuItem.Size = new Size(218, 22);
             apacheHttpdvhostsconfToolStripMenuItem.Text = "apache httpd-vhosts.conf";
             apacheHttpdvhostsconfToolStripMenuItem.Click += apacheHttpdvhostsconfToolStripMenuItem_Click;
             // 
@@ -161,7 +171,7 @@ namespace ZampGUI2
             phpiniToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             phpiniToolStripMenuItem.ForeColor = Color.White;
             phpiniToolStripMenuItem.Name = "phpiniToolStripMenuItem";
-            phpiniToolStripMenuItem.Size = new Size(274, 26);
+            phpiniToolStripMenuItem.Size = new Size(218, 22);
             phpiniToolStripMenuItem.Text = "php.ini";
             phpiniToolStripMenuItem.Click += phpiniToolStripMenuItem_Click;
             // 
@@ -170,7 +180,7 @@ namespace ZampGUI2
             mariadbiniToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             mariadbiniToolStripMenuItem.ForeColor = Color.White;
             mariadbiniToolStripMenuItem.Name = "mariadbiniToolStripMenuItem";
-            mariadbiniToolStripMenuItem.Size = new Size(274, 26);
+            mariadbiniToolStripMenuItem.Size = new Size(218, 22);
             mariadbiniToolStripMenuItem.Text = "mariadb.ini";
             mariadbiniToolStripMenuItem.Click += mariadbiniToolStripMenuItem_Click;
             // 
@@ -179,7 +189,7 @@ namespace ZampGUI2
             hostsFileToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             hostsFileToolStripMenuItem.ForeColor = Color.White;
             hostsFileToolStripMenuItem.Name = "hostsFileToolStripMenuItem";
-            hostsFileToolStripMenuItem.Size = new Size(274, 26);
+            hostsFileToolStripMenuItem.Size = new Size(218, 22);
             hostsFileToolStripMenuItem.Text = "hosts file";
             hostsFileToolStripMenuItem.Click += hostsFileToolStripMenuItem_Click;
             // 
@@ -188,7 +198,7 @@ namespace ZampGUI2
             linksToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { infophpToolStripMenuItem, phpmyadminToolStripMenuItem });
             linksToolStripMenuItem.ForeColor = Color.White;
             linksToolStripMenuItem.Name = "linksToolStripMenuItem";
-            linksToolStripMenuItem.Size = new Size(61, 24);
+            linksToolStripMenuItem.Size = new Size(50, 20);
             linksToolStripMenuItem.Text = "Links";
             // 
             // infophpToolStripMenuItem
@@ -196,7 +206,7 @@ namespace ZampGUI2
             infophpToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             infophpToolStripMenuItem.ForeColor = Color.White;
             infophpToolStripMenuItem.Name = "infophpToolStripMenuItem";
-            infophpToolStripMenuItem.Size = new Size(185, 26);
+            infophpToolStripMenuItem.Size = new Size(148, 22);
             infophpToolStripMenuItem.Text = "info.php";
             infophpToolStripMenuItem.Click += infophpToolStripMenuItem_Click;
             // 
@@ -205,7 +215,7 @@ namespace ZampGUI2
             phpmyadminToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             phpmyadminToolStripMenuItem.ForeColor = Color.White;
             phpmyadminToolStripMenuItem.Name = "phpmyadminToolStripMenuItem";
-            phpmyadminToolStripMenuItem.Size = new Size(185, 26);
+            phpmyadminToolStripMenuItem.Size = new Size(148, 22);
             phpmyadminToolStripMenuItem.Text = "phpmyadmin";
             phpmyadminToolStripMenuItem.Click += phpmyadminToolStripMenuItem_Click;
             // 
@@ -214,7 +224,7 @@ namespace ZampGUI2
             consoleToolStripMenuItem_Console.DropDownItems.AddRange(new ToolStripItem[] { openConsoleToolStripMenuItem, wordpressScriptToolStripMenuItem });
             consoleToolStripMenuItem_Console.ForeColor = Color.White;
             consoleToolStripMenuItem_Console.Name = "consoleToolStripMenuItem_Console";
-            consoleToolStripMenuItem_Console.Size = new Size(82, 24);
+            consoleToolStripMenuItem_Console.Size = new Size(66, 20);
             consoleToolStripMenuItem_Console.Text = "Console";
             // 
             // openConsoleToolStripMenuItem
@@ -222,7 +232,7 @@ namespace ZampGUI2
             openConsoleToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             openConsoleToolStripMenuItem.ForeColor = Color.White;
             openConsoleToolStripMenuItem.Name = "openConsoleToolStripMenuItem";
-            openConsoleToolStripMenuItem.Size = new Size(330, 26);
+            openConsoleToolStripMenuItem.Size = new Size(266, 22);
             openConsoleToolStripMenuItem.Text = "Open Console";
             openConsoleToolStripMenuItem.Click += openConsoleToolStripMenuItem_Click;
             // 
@@ -231,7 +241,7 @@ namespace ZampGUI2
             wordpressScriptToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             wordpressScriptToolStripMenuItem.ForeColor = Color.White;
             wordpressScriptToolStripMenuItem.Name = "wordpressScriptToolStripMenuItem";
-            wordpressScriptToolStripMenuItem.Size = new Size(330, 26);
+            wordpressScriptToolStripMenuItem.Size = new Size(266, 22);
             wordpressScriptToolStripMenuItem.Text = "WordPress automatic installation";
             wordpressScriptToolStripMenuItem.Click += wordpressScriptToolStripMenuItem_Click;
             // 
@@ -239,7 +249,7 @@ namespace ZampGUI2
             // 
             foldersToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { apacheFolderToolStripMenuItem, pHPFolderToolStripMenuItem, mariaDBFOLDERToolStripMenuItem, apacheHtdocsToolStripMenuItem });
             foldersToolStripMenuItem.Name = "foldersToolStripMenuItem";
-            foldersToolStripMenuItem.Size = new Size(77, 24);
+            foldersToolStripMenuItem.Size = new Size(62, 20);
             foldersToolStripMenuItem.Text = "Folders";
             // 
             // apacheFolderToolStripMenuItem
@@ -247,7 +257,7 @@ namespace ZampGUI2
             apacheFolderToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             apacheFolderToolStripMenuItem.ForeColor = Color.White;
             apacheFolderToolStripMenuItem.Name = "apacheFolderToolStripMenuItem";
-            apacheFolderToolStripMenuItem.Size = new Size(224, 26);
+            apacheFolderToolStripMenuItem.Size = new Size(164, 22);
             apacheFolderToolStripMenuItem.Text = "Apache Folder";
             apacheFolderToolStripMenuItem.Click += apacheFolderToolStripMenuItem_Click;
             // 
@@ -256,7 +266,7 @@ namespace ZampGUI2
             pHPFolderToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             pHPFolderToolStripMenuItem.ForeColor = Color.White;
             pHPFolderToolStripMenuItem.Name = "pHPFolderToolStripMenuItem";
-            pHPFolderToolStripMenuItem.Size = new Size(224, 26);
+            pHPFolderToolStripMenuItem.Size = new Size(164, 22);
             pHPFolderToolStripMenuItem.Text = "PHP Folder";
             pHPFolderToolStripMenuItem.Click += pHPFolderToolStripMenuItem_Click;
             // 
@@ -265,7 +275,7 @@ namespace ZampGUI2
             mariaDBFOLDERToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             mariaDBFOLDERToolStripMenuItem.ForeColor = Color.White;
             mariaDBFOLDERToolStripMenuItem.Name = "mariaDBFOLDERToolStripMenuItem";
-            mariaDBFOLDERToolStripMenuItem.Size = new Size(224, 26);
+            mariaDBFOLDERToolStripMenuItem.Size = new Size(164, 22);
             mariaDBFOLDERToolStripMenuItem.Text = "MariaDB Folder";
             mariaDBFOLDERToolStripMenuItem.Click += mariaDBFOLDERToolStripMenuItem_Click;
             // 
@@ -274,7 +284,7 @@ namespace ZampGUI2
             apacheHtdocsToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             apacheHtdocsToolStripMenuItem.ForeColor = Color.White;
             apacheHtdocsToolStripMenuItem.Name = "apacheHtdocsToolStripMenuItem";
-            apacheHtdocsToolStripMenuItem.Size = new Size(224, 26);
+            apacheHtdocsToolStripMenuItem.Size = new Size(164, 22);
             apacheHtdocsToolStripMenuItem.Text = "Apache htdocs";
             apacheHtdocsToolStripMenuItem.Click += apacheHtdocsToolStripMenuItem_Click;
             // 
@@ -283,7 +293,7 @@ namespace ZampGUI2
             helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { docsToolStripMenuItem, checkUpdateToolStripMenuItem, aboutToolStripMenuItem });
             helpToolStripMenuItem.ForeColor = Color.White;
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new Size(55, 24);
+            helpToolStripMenuItem.Size = new Size(45, 20);
             helpToolStripMenuItem.Text = "Help";
             // 
             // docsToolStripMenuItem
@@ -291,7 +301,7 @@ namespace ZampGUI2
             docsToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             docsToolStripMenuItem.ForeColor = Color.White;
             docsToolStripMenuItem.Name = "docsToolStripMenuItem";
-            docsToolStripMenuItem.Size = new Size(193, 26);
+            docsToolStripMenuItem.Size = new Size(154, 22);
             docsToolStripMenuItem.Text = "Docs";
             docsToolStripMenuItem.Click += docsToolStripMenuItem_Click;
             // 
@@ -300,7 +310,7 @@ namespace ZampGUI2
             checkUpdateToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             checkUpdateToolStripMenuItem.ForeColor = Color.White;
             checkUpdateToolStripMenuItem.Name = "checkUpdateToolStripMenuItem";
-            checkUpdateToolStripMenuItem.Size = new Size(193, 26);
+            checkUpdateToolStripMenuItem.Size = new Size(154, 22);
             checkUpdateToolStripMenuItem.Text = "Check update";
             checkUpdateToolStripMenuItem.Click += checkUpdateToolStripMenuItem_Click;
             // 
@@ -309,7 +319,7 @@ namespace ZampGUI2
             aboutToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             aboutToolStripMenuItem.ForeColor = Color.White;
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(193, 26);
+            aboutToolStripMenuItem.Size = new Size(154, 22);
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
@@ -334,9 +344,9 @@ namespace ZampGUI2
             // label_uuid
             // 
             label_uuid.AutoSize = true;
-            label_uuid.Location = new Point(370, 99);
+            label_uuid.Location = new Point(195, 42);
             label_uuid.Name = "label_uuid";
-            label_uuid.Size = new Size(50, 22);
+            label_uuid.Size = new Size(39, 17);
             label_uuid.TabIndex = 9;
             label_uuid.Text = "uuid:";
             // 
@@ -345,43 +355,43 @@ namespace ZampGUI2
             label_wpcli.AutoSize = true;
             label_wpcli.Location = new Point(370, 71);
             label_wpcli.Name = "label_wpcli";
-            label_wpcli.Size = new Size(68, 22);
+            label_wpcli.Size = new Size(53, 17);
             label_wpcli.TabIndex = 8;
             label_wpcli.Text = "wp_cli:";
             // 
             // label_sass
             // 
             label_sass.AutoSize = true;
-            label_sass.Location = new Point(370, 42);
+            label_sass.Location = new Point(370, 99);
             label_sass.Name = "label_sass";
-            label_sass.Size = new Size(55, 22);
+            label_sass.Size = new Size(44, 17);
             label_sass.TabIndex = 7;
             label_sass.Text = "sass:";
             // 
             // label_node
             // 
             label_node.AutoSize = true;
-            label_node.Location = new Point(180, 99);
+            label_node.Location = new Point(195, 99);
             label_node.Name = "label_node";
-            label_node.Size = new Size(58, 22);
+            label_node.Size = new Size(44, 17);
             label_node.TabIndex = 6;
             label_node.Text = "node:";
             // 
             // label_git
             // 
             label_git.AutoSize = true;
-            label_git.Location = new Point(180, 71);
+            label_git.Location = new Point(195, 71);
             label_git.Name = "label_git";
-            label_git.Size = new Size(35, 22);
+            label_git.Size = new Size(27, 17);
             label_git.TabIndex = 5;
             label_git.Text = "git:";
             // 
             // label_composer
             // 
             label_composer.AutoSize = true;
-            label_composer.Location = new Point(180, 42);
+            label_composer.Location = new Point(533, 71);
             label_composer.Name = "label_composer";
-            label_composer.Size = new Size(101, 22);
+            label_composer.Size = new Size(78, 17);
             label_composer.TabIndex = 4;
             label_composer.Text = "composer:";
             // 
@@ -390,7 +400,7 @@ namespace ZampGUI2
             label_php.AutoSize = true;
             label_php.Location = new Point(13, 99);
             label_php.Name = "label_php";
-            label_php.Size = new Size(52, 22);
+            label_php.Size = new Size(40, 17);
             label_php.TabIndex = 3;
             label_php.Text = "php: ";
             // 
@@ -399,7 +409,7 @@ namespace ZampGUI2
             label_mariadb.AutoSize = true;
             label_mariadb.Location = new Point(13, 71);
             label_mariadb.Name = "label_mariadb";
-            label_mariadb.Size = new Size(88, 22);
+            label_mariadb.Size = new Size(69, 17);
             label_mariadb.TabIndex = 2;
             label_mariadb.Text = "mariadb: ";
             // 
@@ -408,7 +418,7 @@ namespace ZampGUI2
             label_apache.AutoSize = true;
             label_apache.Location = new Point(13, 42);
             label_apache.Name = "label_apache";
-            label_apache.Size = new Size(82, 22);
+            label_apache.Size = new Size(64, 17);
             label_apache.TabIndex = 1;
             label_apache.Text = "apache: ";
             // 
@@ -417,7 +427,7 @@ namespace ZampGUI2
             label_path.AutoSize = true;
             label_path.Location = new Point(13, 14);
             label_path.Name = "label_path";
-            label_path.Size = new Size(56, 22);
+            label_path.Size = new Size(44, 17);
             label_path.TabIndex = 0;
             label_path.Text = "path: ";
             // 
@@ -487,21 +497,21 @@ namespace ZampGUI2
             statusStrip1.ImageScalingSize = new Size(20, 20);
             statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1 });
             statusStrip1.LayoutStyle = ToolStripLayoutStyle.Flow;
-            statusStrip1.Location = new Point(0, 485);
+            statusStrip1.Location = new Point(0, 489);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(915, 25);
+            statusStrip1.Size = new Size(915, 21);
             statusStrip1.TabIndex = 10;
             statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            toolStripStatusLabel1.Size = new Size(161, 19);
+            toolStripStatusLabel1.Size = new Size(131, 16);
             toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
-            // Form1
+            // FormMain
             // 
-            AutoScaleDimensions = new SizeF(11F, 22F);
+            AutoScaleDimensions = new SizeF(8F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(45, 45, 48);
             ClientSize = new Size(915, 510);
@@ -519,7 +529,7 @@ namespace ZampGUI2
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4, 3, 4, 3);
             MinimumSize = new Size(931, 549);
-            Name = "Form1";
+            Name = "FormMain";
             Text = "Form1";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
@@ -578,5 +588,6 @@ namespace ZampGUI2
         private ToolStripMenuItem pHPFolderToolStripMenuItem;
         private ToolStripMenuItem mariaDBFOLDERToolStripMenuItem;
         private ToolStripMenuItem apacheHtdocsToolStripMenuItem;
+        private ToolStripMenuItem changeVersionApachePHPToolStripMenuItem;
     }
 }

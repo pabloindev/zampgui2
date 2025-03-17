@@ -97,11 +97,16 @@ namespace ZampGUI2.helper
         /// <returns>Il valore associato alla chiave oppure il valore di default</returns>
         public string Read(string section, string key, string defaultValue = "")
         {
+            string result = null;
             if (data.ContainsKey(section) && data[section].ContainsKey(key))
             {
-                return data[section][key];
+                result = data[section][key];
             }
-            return defaultValue;
+            else
+            {
+                result = defaultValue;
+            }
+            return result.Trim();
         }
 
         /// <summary>

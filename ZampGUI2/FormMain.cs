@@ -6,13 +6,13 @@ using ZampGUI2.helper;
 
 namespace ZampGUI2
 {
-    public partial class Form1 : Form
+    public partial class FormMain : Form
     {
         IniFile config;
         Helper helper;
         Percorsi percorsi;
         string pathini;
-        public Form1()
+        public FormMain()
         {
             InitializeComponent();
 
@@ -52,13 +52,19 @@ namespace ZampGUI2
             {
                 MessageBox.Show($"Apache port {portToCheck} is in use", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
             portToCheck = Convert.ToInt32(config.Read("Porte", "mariadbPort"));
             if (!helper.processo_in_esecuzione("mariadbd") && !helper.IsPortAvailable(portToCheck))
             {
                 MessageBox.Show($"MariaDB port {portToCheck} is in use", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
+
+            //faccio un breve check per verificare se esistono le cartelle per apache php e mariadb
+            if (!percorsi.apache_available || !percorsi.php_available || !percorsi.mariadb_available)
+            {
+                MessageBox.Show("Unable to find apache, php or mariadb folder");
+                System.Windows.Forms.Application.Exit();
+            }
 
             InizializzaComponenti_dacodice();
             RefreshForm(true);
@@ -82,12 +88,48 @@ namespace ZampGUI2
             // Imposta lo sfondo del form
             menuStrip1.Renderer = new RenderingGrafico.DarkMenuRenderer(); // Personalizza il rendering
             this.Text = "ZampGUI v" + config.Read("ImpostazioniGenerali", "currentVersion");
-            
-            //se la cartella non esiste non ha senso mostrare questa voce di menu
-            if(!Directory.Exists(percorsi.wpcli_path))
+
+            // sezione programmi opzinali
+            if (!percorsi.wpcli_available) //se la cartella non esiste non ha senso mostrare questa voce di menu
             {
                 wordpressScriptToolStripMenuItem.Visible = false;
+                label_wpcli.Visible = false;
             }
+            if (!percorsi.composer_available) //se la cartella non esiste non ha senso mostrare questa voce di menu
+            {
+                label_composer.Visible = false;
+            }
+            if (!percorsi.git_available) //se la cartella non esiste non ha senso mostrare questa voce di menu
+            {
+                label_git.Visible = false;
+            }
+            if (!percorsi.sass_available) //se la cartella non esiste non ha senso mostrare questa voce di menu
+            {
+                label_sass.Visible = false;
+            }
+            if (!percorsi.node_available) //se la cartella non esiste non ha senso mostrare questa voce di menu
+            {
+                label_node.Visible = false;
+            }
+            if (!percorsi.wpcli_available) //se la cartella non esiste non ha senso mostrare questa voce di menu
+            {
+                label_wpcli.Visible = false;
+            }
+
+
+            // se ho una sola versione disponibile è inutile mostrare la voce di menu che mi permette di cambiare versione
+            int countfolder = 0;
+            string[] arrfolder = config.Read("FolderName", "apachephpvers").Split(',');
+            foreach(string s in arrfolder)
+            {
+                if(Directory.Exists(Path.Combine(percorsi.pathBase, "Apps", s)))
+                    countfolder++;
+            }
+            if(countfolder == 1)
+            {
+                changeVersionApachePHPToolStripMenuItem.Visible = false;
+            }
+
         }
         private void controllaAggiornamenti(bool showDialogBox = false)
         {
@@ -120,8 +162,8 @@ namespace ZampGUI2
         {
             // update form 
             label_path.Text = "path: " + config.Read("ImpostazioniGenerali", "pathBase");
-            label_apache.Text = "apache: " + config.Read("SoftwareVersion", "apache_vers");
-            label_php.Text = "php: " + config.Read("SoftwareVersion", "php_vers");
+            label_apache.Text = "apache: " + config.Read("SoftwareVersion", "apache_vers") + " (port " + config.Read("Porte", "httpPort") + ")";
+            label_php.Text = "php: " + config.Read("php_vers", config.Read("FolderName", "currentvers"));
             label_mariadb.Text = "mariadb: " + config.Read("SoftwareVersion", "mariadb_vers");
             label_composer.Text = "composer: " + config.Read("SoftwareVersion", "composer_vers");
             label_git.Text = "git: " + config.Read("SoftwareVersion", "git_vers");
@@ -163,29 +205,14 @@ namespace ZampGUI2
         {
             disableControl();
 
-            if (forzaStart == null && forzaStop == null)
+            if (helper.processo_in_esecuzione(nome_processo))
             {
-                if (helper.processo_in_esecuzione(nome_processo))
-                {
-                    var (success, messageStop) = helper.processo_stop(nome_processo);
-                    textBoxOuput.AppendText(messageStop);
-                }
-                else
-                {
-                    helper.processo_start(nome_processo);
-                }
+                var (success, messageStop) = helper.processo_stop(nome_processo);
+                textBoxOuput.AppendText(messageStop);
             }
             else
             {
-                if ((bool)forzaStart)
-                {
-                    helper.processo_start(nome_processo);
-                }
-                else if ((bool)forzaStop)
-                {
-                    var (success, messageStop) = helper.processo_stop(nome_processo);
-                    textBoxOuput.AppendText(messageStop);
-                }
+                helper.processo_start(nome_processo);
             }
 
             // Ritarda l'esecuzione di 1 secondo senza bloccare l'interfaccia utente
@@ -197,11 +224,6 @@ namespace ZampGUI2
 
 
         #region eventi
-        private void btnTest_Click(object sender, EventArgs e)
-        {
-            pictureBox_apache.Image = helper.processo_in_esecuzione("httpd") ? Properties.Resources._checked : Properties.Resources.cancel;
-            pictureBox_mariadb.Image = helper.processo_in_esecuzione("mariadbd") ? Properties.Resources._checked : Properties.Resources.cancel;
-        }
         private void btnStartStopMariadb_Click(object sender, EventArgs e)
         {
             gestione_processo_wrap("mariadbd");
@@ -217,27 +239,27 @@ namespace ZampGUI2
             arrpath.Add(percorsi.mariadb_bin.Replace("/", "\\"));
             arrpath.Add(percorsi.php_path.Replace("/", "\\"));
 
-            if (Directory.Exists(percorsi.composer_path))
+            if (percorsi.composer_available)
             {
                 arrpath.Add(percorsi.composer_path.Replace("/", "\\"));
             }
-            if (Directory.Exists(percorsi.git_path))
+            if (percorsi.git_available)
             {
                 arrpath.Add(percorsi.git_path.Replace("/", "\\"));
             }
-            if (Directory.Exists(percorsi.node_path))
+            if (percorsi.node_available)
             {
                 arrpath.Add(percorsi.node_path.Replace("/", "\\"));
             }
-            if (Directory.Exists(percorsi.sass_path))
+            if (percorsi.sass_available)
             {
                 arrpath.Add(percorsi.sass_path.Replace("/", "\\"));
             }
-            if (Directory.Exists(percorsi.wpcli_path))
+            if (percorsi.wpcli_available)
             {
                 arrpath.Add(percorsi.wpcli_path.Replace("/", "\\"));
             }
-            
+
             var envVars = new Dictionary<string, string>
             {
                 { "ZAMPGUI_PATH", config.Read("ImpostazioniGenerali", "pathBase")},
@@ -255,23 +277,23 @@ namespace ZampGUI2
             messaggioPersonalizzato += "\n" + "- Run 'httpd -v' to see apache version ";
             messaggioPersonalizzato += "\n" + "- Run 'mariadb --version' to see mariadb version ";
             messaggioPersonalizzato += "\n" + "- Run 'php -v' to see php version ";
-            if (Directory.Exists(percorsi.composer_path))
+            if (percorsi.composer_available)
             {
                 messaggioPersonalizzato += "\n" + "- Run 'composer --version' to see composer version ";
             }
-            if (Directory.Exists(percorsi.git_path))
+            if (percorsi.git_available)
             {
                 messaggioPersonalizzato += "\n" + "- Run 'git -v' to see git version ";
             }
-            if (Directory.Exists(percorsi.node_path))
+            if (percorsi.node_available)
             {
                 messaggioPersonalizzato += "\n" + "- Run 'node -v' to see node version ";
             }
-            if (Directory.Exists(percorsi.sass_path))
+            if (percorsi.sass_available)
             {
                 messaggioPersonalizzato += "\n" + "- Run 'sass --version' to see sass version ";
             }
-            if (Directory.Exists(percorsi.wpcli_path))
+            if (percorsi.wpcli_available)
             {
                 messaggioPersonalizzato += "\n" + "- Run 'wp --info' to see wpcli version ";
             }
@@ -396,6 +418,7 @@ namespace ZampGUI2
             var envVars = new Dictionary<string, string>
             {
                 { "ZAMPGUIPATH", percorsi.pathBase },
+                { "CURRENT_VERS", config.Read("FolderName", "currentvers") },
                 { "HTTPPORT", config.Read("Porte", "httpPort") }
             };
 
@@ -428,6 +451,26 @@ namespace ZampGUI2
 
 
 
+        private void changeVersionApachePHPToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<string> list = new List<string>();
+            foreach(string s in config.Read("FolderName", "apachephpvers").Split(','))
+            {
+                list.Add(s);
+            }
+
+            FormSelectVers frm2 = new FormSelectVers(list, config.Read("FolderName", "currentvers"));
+            DialogResult dr = frm2.ShowDialog(this);
+            if (dr == DialogResult.OK)
+            {
+                string valoreInserito = frm2.selectedValue;
+                config.Write("FolderName", "currentvers", valoreInserito);
+                config.Save();
+                config = new IniFile(pathini);
+                MessageBox.Show("To make the changes effective please stop apache, mariadb and close and reopen the application");
+            }
+            frm2.Close();
+        }
     }
 
 }

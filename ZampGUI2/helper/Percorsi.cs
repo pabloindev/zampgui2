@@ -10,14 +10,34 @@ namespace ZampGUI2.helper
     public class Percorsi
     {
         IniFile config;
-        public string pathBase;
+        public string pathBase { get; set; }
 
+        public string[] apachephpvers
+        { 
+            get 
+            {
+                string apachephpvers = config.Read("FolderName", "apachephpvers");
+                string[] result = apachephpvers.Split(new char[] {','});
+                return result;
+            }
+        }
+        public string currentvers
+        {
+            get
+            {
+                string result = config.Read("FolderName", "currentvers");
+                return result;
+            }
+        }
+
+        
+        public bool apache_available { get { return System.IO.Directory.Exists(apache_folder.Replace("/", "\\")); } }
         public string apache_folder
         {
             get
             {
                 string foldername = config.Read("FolderName", "apacheFolderName");
-                string result = Path.Combine(pathBase, "Apps", foldername);
+                string result = Path.Combine(pathBase, "Apps", currentvers, foldername);
                 return result.Replace("\\", "/");
             }
         }
@@ -26,7 +46,7 @@ namespace ZampGUI2.helper
             get
             {
                 string foldername = config.Read("FolderName", "apacheFolderName");
-                string result = Path.Combine(pathBase, "Apps", foldername, "bin");
+                string result = Path.Combine(pathBase, "Apps", currentvers, foldername, "bin");
                 return result.Replace("\\", "/");
             }
         }
@@ -35,7 +55,7 @@ namespace ZampGUI2.helper
             get
             {
                 string foldername = config.Read("FolderName", "apacheFolderName");
-                string result = Path.Combine(pathBase, "Apps", foldername, "conf", "httpd.conf");
+                string result = Path.Combine(pathBase, "Apps", currentvers, foldername, "conf", "httpd.conf");
                 return result.Replace("\\", "/");
             }
         }
@@ -44,7 +64,7 @@ namespace ZampGUI2.helper
             get
             {
                 string foldername = config.Read("FolderName", "apacheFolderName");
-                string result = Path.Combine(pathBase, "Apps", foldername, "conf", "extra", "httpd-vhosts.conf");
+                string result = Path.Combine(pathBase, "Apps", currentvers, foldername, "conf", "extra", "httpd-vhosts.conf");
                 return result.Replace("\\", "/");
             }
         }
@@ -53,16 +73,19 @@ namespace ZampGUI2.helper
             get
             {
                 string foldername = config.Read("FolderName", "apacheFolderName");
-                string result = Path.Combine(pathBase, "Apps", foldername, "htdocs");
+                string result = Path.Combine(pathBase, "Apps", currentvers, foldername, "htdocs");
                 return result.Replace("\\", "/");
             }
         }
+
+        
+        public bool php_available { get { return System.IO.Directory.Exists(php_path.Replace("/", "\\")); } }
         public string php_path
         {
             get
             {
                 string foldername = config.Read("FolderName", "phpFolderName");
-                string result = Path.Combine(pathBase, "Apps", foldername);
+                string result = Path.Combine(pathBase, "Apps", currentvers, foldername);
                 return result.Replace("\\", "/");
             }
         }
@@ -71,10 +94,13 @@ namespace ZampGUI2.helper
             get
             {
                 string foldername = config.Read("FolderName", "phpFolderName");
-                string result = Path.Combine(pathBase, "Apps", foldername, "php.ini");
+                string result = Path.Combine(pathBase, "Apps", currentvers, foldername, "php.ini");
                 return result.Replace("\\", "/");
             }
         }
+
+        
+        public bool mariadb_available { get { return System.IO.Directory.Exists(mariadb_folder.Replace("/", "\\")); } }
         public string mariadb_folder
         {
             get
@@ -120,6 +146,9 @@ namespace ZampGUI2.helper
                 return result;
             }
         }
+        
+
+        public bool composer_available { get { return System.IO.Directory.Exists(composer_path.Replace("/", "\\")); } }
         public string composer_path
         {
             get
@@ -129,6 +158,9 @@ namespace ZampGUI2.helper
                 return result.Replace("\\", "/");
             }
         }
+
+
+        public bool git_available { get { return System.IO.Directory.Exists(git_path.Replace("/", "\\")); } }
         public string git_path
         {
             get
@@ -138,6 +170,9 @@ namespace ZampGUI2.helper
                 return result.Replace("\\", "/");
             }
         }
+
+
+        public bool sass_available { get { return System.IO.Directory.Exists(sass_path.Replace("/", "\\")); } }
         public string sass_path
         {
             get
@@ -147,6 +182,9 @@ namespace ZampGUI2.helper
                 return result.Replace("\\", "/");
             }
         }
+
+
+        public bool node_available { get { return System.IO.Directory.Exists(node_path.Replace("/", "\\")); } }
         public string node_path
         {
             get
@@ -156,6 +194,9 @@ namespace ZampGUI2.helper
                 return result.Replace("\\", "/");
             }
         }
+
+
+        public bool wpcli_available { get { return System.IO.Directory.Exists(wpcli_path.Replace("/", "\\")); } }
         public string wpcli_path
         {
             get
