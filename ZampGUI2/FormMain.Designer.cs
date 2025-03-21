@@ -30,19 +30,22 @@ namespace ZampGUI2
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             menuStrip1 = new MenuStrip();
             serverToolStripMenuItem1 = new ToolStripMenuItem();
             editHTTPPortToolStripMenuItem = new ToolStripMenuItem();
             changeDefaultEditorToolStripMenuItem = new ToolStripMenuItem();
-            exitToolStripMenuItem = new ToolStripMenuItem();
             changeVersionApachePHPToolStripMenuItem = new ToolStripMenuItem();
+            checkForUpdatesAtStartupToolStripMenuItem = new ToolStripMenuItem();
+            exitToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
             apacheHttpdToolStripMenuItem = new ToolStripMenuItem();
             apacheHttpdvhostsconfToolStripMenuItem = new ToolStripMenuItem();
             phpiniToolStripMenuItem = new ToolStripMenuItem();
             mariadbiniToolStripMenuItem = new ToolStripMenuItem();
             hostsFileToolStripMenuItem = new ToolStripMenuItem();
+            zampGUIIniToolStripMenuItem = new ToolStripMenuItem();
             linksToolStripMenuItem = new ToolStripMenuItem();
             infophpToolStripMenuItem = new ToolStripMenuItem();
             phpmyadminToolStripMenuItem = new ToolStripMenuItem();
@@ -71,11 +74,14 @@ namespace ZampGUI2
             label_path = new Label();
             btnStartStopApache = new Button();
             btnStartStopMariadb = new Button();
-            textBoxOuput = new TextBox();
             pictureBox_apache = new PictureBox();
             pictureBox_mariadb = new PictureBox();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
+            textBoxOuput = new DarkTextBox();
+            timer_refreshFormProcess = new System.Windows.Forms.Timer(components);
+            backupDatabasesToolStripMenuItem = new ToolStripMenuItem();
+            runSqlScriptsToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox_apache).BeginInit();
@@ -99,7 +105,8 @@ namespace ZampGUI2
             // 
             // serverToolStripMenuItem1
             // 
-            serverToolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { editHTTPPortToolStripMenuItem, changeDefaultEditorToolStripMenuItem, changeVersionApachePHPToolStripMenuItem, exitToolStripMenuItem });
+            serverToolStripMenuItem1.CheckOnClick = true;
+            serverToolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { editHTTPPortToolStripMenuItem, changeDefaultEditorToolStripMenuItem, changeVersionApachePHPToolStripMenuItem, checkForUpdatesAtStartupToolStripMenuItem, exitToolStripMenuItem });
             serverToolStripMenuItem1.Name = "serverToolStripMenuItem1";
             serverToolStripMenuItem1.Size = new Size(55, 20);
             serverToolStripMenuItem1.Text = "Server";
@@ -122,15 +129,6 @@ namespace ZampGUI2
             changeDefaultEditorToolStripMenuItem.Text = "Change default editor";
             changeDefaultEditorToolStripMenuItem.Click += changeDefaultEditorToolStripMenuItem_Click;
             // 
-            // exitToolStripMenuItem
-            // 
-            exitToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
-            exitToolStripMenuItem.ForeColor = Color.White;
-            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(243, 22);
-            exitToolStripMenuItem.Text = "Exit";
-            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
-            // 
             // changeVersionApachePHPToolStripMenuItem
             // 
             changeVersionApachePHPToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
@@ -140,9 +138,28 @@ namespace ZampGUI2
             changeVersionApachePHPToolStripMenuItem.Text = "Change Version Apache/PHP";
             changeVersionApachePHPToolStripMenuItem.Click += changeVersionApachePHPToolStripMenuItem_Click;
             // 
+            // checkForUpdatesAtStartupToolStripMenuItem
+            // 
+            checkForUpdatesAtStartupToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
+            checkForUpdatesAtStartupToolStripMenuItem.CheckOnClick = true;
+            checkForUpdatesAtStartupToolStripMenuItem.ForeColor = Color.White;
+            checkForUpdatesAtStartupToolStripMenuItem.Name = "checkForUpdatesAtStartupToolStripMenuItem";
+            checkForUpdatesAtStartupToolStripMenuItem.Size = new Size(243, 22);
+            checkForUpdatesAtStartupToolStripMenuItem.Text = "Check for updates at startup";
+            checkForUpdatesAtStartupToolStripMenuItem.Click += checkForUpdatesAtStartupToolStripMenuItem_Click;
+            // 
+            // exitToolStripMenuItem
+            // 
+            exitToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
+            exitToolStripMenuItem.ForeColor = Color.White;
+            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            exitToolStripMenuItem.Size = new Size(243, 22);
+            exitToolStripMenuItem.Text = "Exit";
+            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+            // 
             // editToolStripMenuItem
             // 
-            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { apacheHttpdToolStripMenuItem, apacheHttpdvhostsconfToolStripMenuItem, phpiniToolStripMenuItem, mariadbiniToolStripMenuItem, hostsFileToolStripMenuItem });
+            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { apacheHttpdToolStripMenuItem, apacheHttpdvhostsconfToolStripMenuItem, phpiniToolStripMenuItem, mariadbiniToolStripMenuItem, hostsFileToolStripMenuItem, zampGUIIniToolStripMenuItem });
             editToolStripMenuItem.ForeColor = Color.White;
             editToolStripMenuItem.Name = "editToolStripMenuItem";
             editToolStripMenuItem.Size = new Size(42, 20);
@@ -193,6 +210,15 @@ namespace ZampGUI2
             hostsFileToolStripMenuItem.Text = "hosts file";
             hostsFileToolStripMenuItem.Click += hostsFileToolStripMenuItem_Click;
             // 
+            // zampGUIIniToolStripMenuItem
+            // 
+            zampGUIIniToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
+            zampGUIIniToolStripMenuItem.ForeColor = Color.White;
+            zampGUIIniToolStripMenuItem.Name = "zampGUIIniToolStripMenuItem";
+            zampGUIIniToolStripMenuItem.Size = new Size(218, 22);
+            zampGUIIniToolStripMenuItem.Text = "ZampGUI ini";
+            zampGUIIniToolStripMenuItem.Click += zampGUIIniToolStripMenuItem_Click;
+            // 
             // linksToolStripMenuItem
             // 
             linksToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { infophpToolStripMenuItem, phpmyadminToolStripMenuItem });
@@ -221,7 +247,7 @@ namespace ZampGUI2
             // 
             // consoleToolStripMenuItem_Console
             // 
-            consoleToolStripMenuItem_Console.DropDownItems.AddRange(new ToolStripItem[] { openConsoleToolStripMenuItem, wordpressScriptToolStripMenuItem });
+            consoleToolStripMenuItem_Console.DropDownItems.AddRange(new ToolStripItem[] { openConsoleToolStripMenuItem, wordpressScriptToolStripMenuItem, backupDatabasesToolStripMenuItem, runSqlScriptsToolStripMenuItem });
             consoleToolStripMenuItem_Console.ForeColor = Color.White;
             consoleToolStripMenuItem_Console.Name = "consoleToolStripMenuItem_Console";
             consoleToolStripMenuItem_Console.Size = new Size(66, 20);
@@ -457,21 +483,9 @@ namespace ZampGUI2
             btnStartStopMariadb.UseVisualStyleBackColor = true;
             btnStartStopMariadb.Click += btnStartStopMariadb_Click;
             // 
-            // textBoxOuput
-            // 
-            textBoxOuput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            textBoxOuput.BackColor = Color.FromArgb(45, 45, 48);
-            textBoxOuput.BorderStyle = BorderStyle.FixedSingle;
-            textBoxOuput.ForeColor = Color.White;
-            textBoxOuput.Location = new Point(11, 184);
-            textBoxOuput.Multiline = true;
-            textBoxOuput.Name = "textBoxOuput";
-            textBoxOuput.ScrollBars = ScrollBars.Both;
-            textBoxOuput.Size = new Size(894, 293);
-            textBoxOuput.TabIndex = 6;
-            // 
             // pictureBox_apache
             // 
+            pictureBox_apache.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox_apache.Image = Properties.Resources.cancel;
             pictureBox_apache.Location = new Point(746, 69);
             pictureBox_apache.Name = "pictureBox_apache";
@@ -482,6 +496,7 @@ namespace ZampGUI2
             // 
             // pictureBox_mariadb
             // 
+            pictureBox_mariadb.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox_mariadb.Image = Properties.Resources.cancel;
             pictureBox_mariadb.Location = new Point(746, 126);
             pictureBox_mariadb.Name = "pictureBox_mariadb";
@@ -509,16 +524,54 @@ namespace ZampGUI2
             toolStripStatusLabel1.Size = new Size(131, 16);
             toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
+            // textBoxOuput
+            // 
+            textBoxOuput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            textBoxOuput.BackColor = Color.FromArgb(30, 30, 30);
+            textBoxOuput.BorderStyle = BorderStyle.FixedSingle;
+            textBoxOuput.ForeColor = Color.White;
+            textBoxOuput.Location = new Point(12, 184);
+            textBoxOuput.Multiline = true;
+            textBoxOuput.Name = "textBoxOuput";
+            textBoxOuput.ReadOnly = true;
+            textBoxOuput.ScrollBars = ScrollBars.Vertical;
+            textBoxOuput.Size = new Size(891, 293);
+            textBoxOuput.TabIndex = 11;
+            // 
+            // timer_refreshFormProcess
+            // 
+            timer_refreshFormProcess.Enabled = true;
+            timer_refreshFormProcess.Interval = 15000;
+            timer_refreshFormProcess.Tick += timer_refreshFormProcess_Tick;
+            // 
+            // backupDatabasesToolStripMenuItem
+            // 
+            backupDatabasesToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
+            backupDatabasesToolStripMenuItem.ForeColor = Color.White;
+            backupDatabasesToolStripMenuItem.Name = "backupDatabasesToolStripMenuItem";
+            backupDatabasesToolStripMenuItem.Size = new Size(266, 22);
+            backupDatabasesToolStripMenuItem.Text = "Backup Databases";
+            backupDatabasesToolStripMenuItem.Click += backupDatabasesToolStripMenuItem_Click;
+            // 
+            // runSqlScriptsToolStripMenuItem
+            // 
+            runSqlScriptsToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
+            runSqlScriptsToolStripMenuItem.ForeColor = Color.White;
+            runSqlScriptsToolStripMenuItem.Name = "runSqlScriptsToolStripMenuItem";
+            runSqlScriptsToolStripMenuItem.Size = new Size(266, 22);
+            runSqlScriptsToolStripMenuItem.Text = "Run sql Scripts";
+            runSqlScriptsToolStripMenuItem.Click += runSqlScriptsToolStripMenuItem_Click;
+            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(8F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(45, 45, 48);
             ClientSize = new Size(915, 510);
+            Controls.Add(textBoxOuput);
             Controls.Add(statusStrip1);
             Controls.Add(pictureBox_mariadb);
             Controls.Add(pictureBox_apache);
-            Controls.Add(textBoxOuput);
             Controls.Add(btnStartStopMariadb);
             Controls.Add(btnStartStopApache);
             Controls.Add(panel1);
@@ -530,7 +583,9 @@ namespace ZampGUI2
             Margin = new Padding(4, 3, 4, 3);
             MinimumSize = new Size(931, 549);
             Name = "FormMain";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
+            Load += FormMain_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             panel1.ResumeLayout(false);
@@ -564,7 +619,6 @@ namespace ZampGUI2
         private Label label_path;
         private Button btnStartStopApache;
         private Button btnStartStopMariadb;
-        public TextBox textBoxOuput;
         private Label label_sass;
         private Label label_node;
         private Label label_git;
@@ -589,5 +643,11 @@ namespace ZampGUI2
         private ToolStripMenuItem mariaDBFOLDERToolStripMenuItem;
         private ToolStripMenuItem apacheHtdocsToolStripMenuItem;
         private ToolStripMenuItem changeVersionApachePHPToolStripMenuItem;
+        private ToolStripMenuItem checkForUpdatesAtStartupToolStripMenuItem;
+        public DarkTextBox textBoxOuput;
+        private System.Windows.Forms.Timer timer_refreshFormProcess;
+        private ToolStripMenuItem zampGUIIniToolStripMenuItem;
+        private ToolStripMenuItem backupDatabasesToolStripMenuItem;
+        private ToolStripMenuItem runSqlScriptsToolStripMenuItem;
     }
 }

@@ -1,8 +1,11 @@
 
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
 using System.Security.Policy;
+using System.Windows.Forms;
 using ZampGUI2.helper;
+using ZampGUI2.RenderingGrafico;
 
 namespace ZampGUI2
 {
@@ -12,6 +15,10 @@ namespace ZampGUI2
         Helper helper;
         Percorsi percorsi;
         string pathini;
+
+        [DllImport("dwmapi.dll")]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
         public FormMain()
         {
             InitializeComponent();
@@ -66,8 +73,15 @@ namespace ZampGUI2
                 System.Windows.Forms.Application.Exit();
             }
 
-            InizializzaComponenti_dacodice();
-            RefreshForm(true);
+            // tolgo la possibilità di editare il file se non sono io
+            if (config.Read("ImpostazioniGenerali", "uuid") != "mio")
+            {
+                zampGUIIniToolStripMenuItem.Visible = false;
+            }
+
+            // *****************************************************************
+            //prosegue con operazioni eseguite nel metodo "FormMain_Load()"
+            // *****************************************************************
         }
 
         private void disableControl()
@@ -83,11 +97,14 @@ namespace ZampGUI2
             menuStrip1.Enabled = true;
         }
 
-        private void InizializzaComponenti_dacodice()
+        private void inizializzaComponenti_dacodice()
         {
+            //DarkModeManager.EnableDarkMode(this);
+
             // Imposta lo sfondo del form
             menuStrip1.Renderer = new RenderingGrafico.DarkMenuRenderer(); // Personalizza il rendering
             this.Text = "ZampGUI v" + config.Read("ImpostazioniGenerali", "currentVersion");
+
 
             // sezione programmi opzinali
             if (!percorsi.wpcli_available) //se la cartella non esiste non ha senso mostrare questa voce di menu
@@ -117,15 +134,27 @@ namespace ZampGUI2
             }
 
 
+            // imposto il check che mi dice se sono abilitati gli update
+            checkForUpdatesAtStartupToolStripMenuItem.Checked = config.Read("ImpostazioniGenerali", "checkLastVersionApp") == "true";
+            if (checkForUpdatesAtStartupToolStripMenuItem.Checked)
+            {
+                checkForUpdatesAtStartupToolStripMenuItem.CheckState = CheckState.Checked;
+            }
+            else
+            {
+                checkForUpdatesAtStartupToolStripMenuItem.CheckState = CheckState.Unchecked;
+            }
+
+
             // se ho una sola versione disponibile è inutile mostrare la voce di menu che mi permette di cambiare versione
             int countfolder = 0;
             string[] arrfolder = config.Read("FolderName", "apachephpvers").Split(',');
-            foreach(string s in arrfolder)
+            foreach (string s in arrfolder)
             {
-                if(Directory.Exists(Path.Combine(percorsi.pathBase, "Apps", s)))
+                if (Directory.Exists(Path.Combine(percorsi.pathBase, "Apps", s)))
                     countfolder++;
             }
-            if(countfolder == 1)
+            if (countfolder == 1)
             {
                 changeVersionApachePHPToolStripMenuItem.Visible = false;
             }
@@ -158,7 +187,7 @@ namespace ZampGUI2
                 }
             }
         }
-        private void RefreshForm(bool primoCaricamentoForm = false)
+        private void refreshForm(bool primoCaricamentoForm = false)
         {
             // update form 
             label_path.Text = "path: " + config.Read("ImpostazioniGenerali", "pathBase");
@@ -172,6 +201,13 @@ namespace ZampGUI2
             label_wpcli.Text = "wp cli: " + config.Read("SoftwareVersion", "wp_cli_vers");
             label_uuid.Text = "uuid: " + config.Read("ImpostazioniGenerali", "uuid");
 
+            refreshFormProcess();
+
+            if (primoCaricamentoForm)
+                controllaAggiornamenti();
+        }
+        public void refreshFormProcess()
+        {
             // aggiorno le immaginette
             bool hhtpd_in_esecuzione = helper.processo_in_esecuzione("httpd");
             bool mariadb_in_esecuzione = helper.processo_in_esecuzione("mariadbd");
@@ -196,11 +232,7 @@ namespace ZampGUI2
                 pictureBox_mariadb.Image = Properties.Resources.cancel;
                 btnStartStopMariadb.Text = "Start MariaDB";
             }
-
-            if (primoCaricamentoForm)
-                controllaAggiornamenti();
         }
-
         private async void gestione_processo_wrap(string nome_processo, bool? forzaStart = null, bool? forzaStop = null)
         {
             disableControl();
@@ -217,10 +249,9 @@ namespace ZampGUI2
 
             // Ritarda l'esecuzione di 1 secondo senza bloccare l'interfaccia utente
             await Task.Delay(3000);
-            RefreshForm();
+            refreshForm();
             enableControl();
         }
-
 
 
         #region eventi
@@ -378,7 +409,7 @@ namespace ZampGUI2
         }
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string text = "Zamgui version " + config.Read("ImpostazioniGenerali", "currentVersion") + " (Wamp with apache php and mariadb)";
+            string text = "Zamgui version " + config.Read("ImpostazioniGenerali", "currentVersion") + " \n(Wamp with apache php and mariadb)";
             string linkText = "Home page";
             string linkUrl = config.Read("ImpostazioniGenerali", "urlHomepage");
 
@@ -411,26 +442,7 @@ namespace ZampGUI2
             }
             frm2.Close();
         }
-        private void wordpressScriptToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string batFilePath = Path.Combine(config.Read("ImpostazioniGenerali", "pathBase"), "Scripts", "template", "wptemplate.bat");
-            string workingdir = percorsi.apache_htdocs;
-            var envVars = new Dictionary<string, string>
-            {
-                { "ZAMPGUIPATH", percorsi.pathBase },
-                { "CURRENT_VERS", config.Read("FolderName", "currentvers") },
-                { "HTTPPORT", config.Read("Porte", "httpPort") }
-            };
-
-            if (!helper.processo_in_esecuzione("mariadbd") || !helper.processo_in_esecuzione("httpd"))
-            {
-                MessageBox.Show("Web Server and database not available - Please Start Apche and Mariadb");
-            }
-            else
-            {
-                helper.LaunchBatchFileVisible(batFilePath, workingdir, envVars);
-            }
-        }
+        
         private void apacheFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("explorer.exe", percorsi.apache_folder.Replace("/", "\\"));
@@ -447,14 +459,10 @@ namespace ZampGUI2
         {
             Process.Start("explorer.exe", percorsi.apache_htdocs.Replace("/", "\\"));
         }
-        #endregion
-
-
-
         private void changeVersionApachePHPToolStripMenuItem_Click(object sender, EventArgs e)
         {
             List<string> list = new List<string>();
-            foreach(string s in config.Read("FolderName", "apachephpvers").Split(','))
+            foreach (string s in config.Read("FolderName", "apachephpvers").Split(','))
             {
                 list.Add(s);
             }
@@ -471,6 +479,117 @@ namespace ZampGUI2
             }
             frm2.Close();
         }
+        private void checkForUpdatesAtStartupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            config.Write("ImpostazioniGenerali", "checkLastVersionApp", checkForUpdatesAtStartupToolStripMenuItem.Checked ? "true" : "false");
+            if (checkForUpdatesAtStartupToolStripMenuItem.Checked)
+            {
+                checkForUpdatesAtStartupToolStripMenuItem.CheckState = CheckState.Checked;
+            }
+            else
+            {
+                checkForUpdatesAtStartupToolStripMenuItem.CheckState = CheckState.Unchecked;
+            }
+            config.Save();
+            config = new IniFile(pathini);
+        }
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            //Per la barra del titolo (title bar) scura
+
+            base.OnHandleCreated(e);
+
+            // Attiva la dark mode per la barra del titolo
+            DarkModeHelper.SetDarkMode(this.Handle, true);
+
+            // Imposta un colore personalizzato per la barra del titolo
+            DarkModeHelper.SetCaptionColor(this.Handle, Color.FromArgb(32, 32, 32));
+        }
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            inizializzaComponenti_dacodice();
+            refreshForm(true);
+        }
+        private void timer_refreshFormProcess_Tick(object sender, EventArgs e)
+        {
+            refreshFormProcess();
+        }
+        private void zampGUIIniToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            helper.openFileWithEditor(config.Read("ImpostazioniGenerali", "editor"), percorsi.zampgui_ini);
+        }
+
+        private void wordpressScriptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // ---------------------- vecchia versione lanciando file .bat ----------------------
+            //var envVars = new Dictionary<string, string>
+            //{
+            //    { "ZAMPGUIPATH", percorsi.pathBase },
+            //    { "CURRENT_VERS", config.Read("FolderName", "currentvers") },
+            //    { "HTTPPORT", config.Read("Porte", "httpPort") }
+            //};
+            //string workingdir = percorsi.apache_htdocs;
+            //string batFilePath = Path.Combine(config.Read("ImpostazioniGenerali", "pathBase"), "Scripts", "template", "wptemplate.bat");
+            //if (!helper.processo_in_esecuzione("mariadbd") || !helper.processo_in_esecuzione("httpd"))
+            //{
+            //    MessageBox.Show("Web Server and database not available - Please Start Apche and Mariadb");
+            //}
+            //else
+            //{
+            //    helper.LaunchBatchFileVisible(batFilePath, workingdir, envVars);
+            //}
+            var envVars = new Dictionary<string, string>
+            {
+                { "ZAMPGUIPATH", percorsi.pathBase},
+                { "CURRENT_VERS", config.Read("FolderName", "currentvers")},
+                { "HTTPPORT", config.Read("Porte", "httpPort")}
+            };
+
+            bool result = helper.runZampGUI_Console("wordpressinstallation", envVars, new string[] { });
+        }
+        private void backupDatabasesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var envVars = new Dictionary<string, string>
+            {
+                { "ZAMPGUIPATH", percorsi.pathBase},
+                { "CURRENT_VERS", config.Read("FolderName", "currentvers")},
+                { "MARIADBBIN", percorsi.mariadb_bin}
+            };
+
+            bool result = helper.runZampGUI_Console("backupdatabases", envVars, new string[] { });
+        }
+        private void runSqlScriptsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Creazione dell'oggetto OpenFileDialog
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                // Configurazione della finestra di dialogo
+                openFileDialog.Title = "Seleziona file SQL";
+                openFileDialog.Filter = "File SQL (*.sql)|*.sql|Tutti i file (*.*)|*.*";
+                openFileDialog.Multiselect = true; // Permette la selezione di più file
+                openFileDialog.RestoreDirectory = true; // Ripristina la directory iniziale dopo la chiusura
+
+                // Mostra la finestra di dialogo e verifica se l'utente ha premuto OK
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Recupera i percorsi dei file selezionati
+                    string[] selectedFiles = openFileDialog.FileNames;
+
+                    // Creazione di una lista per memorizzare i file selezionati
+                    List<string> fileList = new List<string>(selectedFiles);
+
+                    if(fileList.Count() > 0)
+                    {
+                        var envVars = new Dictionary<string, string>
+                        {
+                            { "MARIADBBIN", percorsi.mariadb_bin}
+                        };
+                        bool result = helper.runZampGUI_Console("sqlscripts", envVars, fileList.ToArray());
+                    }
+                }
+            }
+        }
+        #endregion
     }
 
 }

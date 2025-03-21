@@ -10,6 +10,7 @@ using System.Collections.Specialized;
 using System.Runtime.ConstrainedExecution;
 using System.ComponentModel;
 using System.Net.Sockets;
+using System.IO;
 
 namespace ZampGUI2.helper
 {
@@ -111,8 +112,9 @@ namespace ZampGUI2.helper
                 MaximizeBox = false,
                 MinimizeBox = false,
                 BackColor = Color.FromArgb(30, 30, 30), // Sfondo scuro
-                ForeColor = Color.White // Testo bianco
+                ForeColor = Color.White, // Testo bianco
             };
+            
 
             // Aggiungi un Label per il testo
             Label label = new Label()
@@ -209,6 +211,64 @@ namespace ZampGUI2.helper
         }
 
         #region gestione processi
+        public bool runZampGUI_Console(string typeOfJob, Dictionary<string, string> environmentVariables, string[] args)
+        {
+            string consoleAppPath = percorsi.zampgui_console_exe;
+            string combinedPaths = string.Join(" ", args.Select(p => $"\"{p}\""));
+
+            if (!File.Exists(consoleAppPath))
+            {
+                MessageBox.Show($"Unable to find ZampGUI_Console.exe", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            // Configurazione del ProcessStartInfo per avviare il processo figlio
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = consoleAppPath,
+                Arguments = typeOfJob + (string.IsNullOrEmpty(combinedPaths) ? "" : " " + combinedPaths),
+                UseShellExecute = false,  // Consente di impostare le variabili solo per il processo figlio
+                CreateNoWindow = false,   // La console verrà mostrata
+                WindowStyle = ProcessWindowStyle.Normal,
+                WorkingDirectory = percorsi.zampgui_console_path
+            };
+
+            // Impostazione delle variabili d'ambiente specifiche per il processo figlio:
+            foreach (var kvp in environmentVariables)
+            {
+                psi.EnvironmentVariables[kvp.Key] = kvp.Value;
+            }
+        
+            try
+            {
+                // Avvio del processo console
+                using (Process process = Process.Start(psi))
+                {
+                    // Attende la fine del processo
+                    process.WaitForExit();
+
+                    // Recupera il codice di uscita
+                    int exitCode = process.ExitCode;
+
+                    if (exitCode == 0)
+                    {
+                        // OK - Notifica il risultato all'utente
+                        //MessageBox.Show($"L'applicazione console ha terminato con exit code: {exitCode}", "Risultato", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return true;
+                    }
+                    else
+                    {
+                        // errore
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return false;
+        }
         public bool IsPortAvailable(int port)
         {
             bool isAvailable = true;

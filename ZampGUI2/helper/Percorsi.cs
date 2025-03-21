@@ -30,7 +30,35 @@ namespace ZampGUI2.helper
             }
         }
 
-        
+
+        public string zampgui_ini
+        {
+            get
+            {
+                string result = Path.Combine(pathBase, "Apps", "ZampGUI2", "config.ini");
+                return result.Replace("\\", "/");
+            }
+        }
+
+
+        public string zampgui_console_exe
+        {
+            get
+            {
+                string result = Path.Combine(pathBase, "Apps", "ZampGUI_Console", "ZampGUI_Console.exe");
+                return result;
+            }
+        }
+        public string zampgui_console_path
+        {
+            get
+            {
+                string result = Path.Combine(pathBase, "Apps", "ZampGUI_Console");
+                return result;
+            }
+        }
+
+
         public bool apache_available { get { return System.IO.Directory.Exists(apache_folder.Replace("/", "\\")); } }
         public string apache_folder
         {

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZampGUI2.helper;
+using ZampGUI2.RenderingGrafico;
 
 namespace ZampGUI2
 {
@@ -74,6 +75,19 @@ namespace ZampGUI2
             textBox1.Text = "";
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            //Per la barra del titolo (title bar) scura
+
+            base.OnHandleCreated(e);
+
+            // Attiva la dark mode per la barra del titolo
+            DarkModeHelper.SetDarkMode(this.Handle, true);
+
+            // Imposta un colore personalizzato per la barra del titolo
+            DarkModeHelper.SetCaptionColor(this.Handle, Color.FromArgb(32, 32, 32));
         }
     }
 }
