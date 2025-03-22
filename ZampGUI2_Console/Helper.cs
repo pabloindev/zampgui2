@@ -25,9 +25,9 @@ namespace ZampGUI2_Console
             }
 
             // Check length constraints
-            if (input.Length < 4 || input.Length > 25)
+            if (input.Length < 3 || input.Length > 25)
             {
-                return "Error: The string must be between 4 and 25 characters long.";
+                return "Error: The string must be between 3 and 25 characters long.";
             }
 
             // Check if the string starts with a letter and contains only alphanumeric characters

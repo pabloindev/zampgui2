@@ -31,11 +31,11 @@ namespace ZampGUI2_Console
             {
                 throw new Exception($"directory {ZAMPGUIPATH} not found");
             }
-            if (Regex.IsMatch(CURRENT_VERS, @"^\d+$"))
+            if (!int.TryParse(CURRENT_VERS, out _))
             {
                 throw new Exception($"value {CURRENT_VERS} not valid");
             }
-            if (Regex.IsMatch(HTTPPORT, @"^\d+$"))
+            if (!Regex.IsMatch(HTTPPORT, @"^\d+$"))
             {
                 throw new Exception($"value {HTTPPORT} not valid");
             }

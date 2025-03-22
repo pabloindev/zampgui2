@@ -9,6 +9,12 @@ class Program
     {
         int exitcode = 0;
         Logging log = new Logging();
+
+        if (Debugger.IsAttached)
+        {
+            args = ["wpnewinstance"];
+        }
+
         try
         {
             // Verifica se il parametro obbligatorio typeofjob è presente
