@@ -51,7 +51,12 @@ namespace ZampGUI2
             phpmyadminToolStripMenuItem = new ToolStripMenuItem();
             consoleToolStripMenuItem_Console = new ToolStripMenuItem();
             openConsoleToolStripMenuItem = new ToolStripMenuItem();
+            wordpressSaveInstanceToolStripMenuItem = new ToolStripMenuItem();
+            wordpressRestoreInstanceToolStripMenuItem = new ToolStripMenuItem();
+            wordpressDeleteInstanceToolStripMenuItem = new ToolStripMenuItem();
             wordpressScriptToolStripMenuItem = new ToolStripMenuItem();
+            backupDatabasesToolStripMenuItem = new ToolStripMenuItem();
+            runSqlScriptsToolStripMenuItem = new ToolStripMenuItem();
             foldersToolStripMenuItem = new ToolStripMenuItem();
             apacheFolderToolStripMenuItem = new ToolStripMenuItem();
             pHPFolderToolStripMenuItem = new ToolStripMenuItem();
@@ -80,8 +85,6 @@ namespace ZampGUI2
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             textBoxOuput = new DarkTextBox();
             timer_refreshFormProcess = new System.Windows.Forms.Timer(components);
-            backupDatabasesToolStripMenuItem = new ToolStripMenuItem();
-            runSqlScriptsToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox_apache).BeginInit();
@@ -247,7 +250,7 @@ namespace ZampGUI2
             // 
             // consoleToolStripMenuItem_Console
             // 
-            consoleToolStripMenuItem_Console.DropDownItems.AddRange(new ToolStripItem[] { openConsoleToolStripMenuItem, wordpressScriptToolStripMenuItem, backupDatabasesToolStripMenuItem, runSqlScriptsToolStripMenuItem });
+            consoleToolStripMenuItem_Console.DropDownItems.AddRange(new ToolStripItem[] { openConsoleToolStripMenuItem, wordpressSaveInstanceToolStripMenuItem, wordpressRestoreInstanceToolStripMenuItem, wordpressDeleteInstanceToolStripMenuItem, wordpressScriptToolStripMenuItem, backupDatabasesToolStripMenuItem, runSqlScriptsToolStripMenuItem });
             consoleToolStripMenuItem_Console.ForeColor = Color.White;
             consoleToolStripMenuItem_Console.Name = "consoleToolStripMenuItem_Console";
             consoleToolStripMenuItem_Console.Size = new Size(66, 20);
@@ -258,18 +261,63 @@ namespace ZampGUI2
             openConsoleToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             openConsoleToolStripMenuItem.ForeColor = Color.White;
             openConsoleToolStripMenuItem.Name = "openConsoleToolStripMenuItem";
-            openConsoleToolStripMenuItem.Size = new Size(266, 22);
+            openConsoleToolStripMenuItem.Size = new Size(239, 22);
             openConsoleToolStripMenuItem.Text = "Open Console";
             openConsoleToolStripMenuItem.Click += openConsoleToolStripMenuItem_Click;
+            // 
+            // wordpressSaveInstanceToolStripMenuItem
+            // 
+            wordpressSaveInstanceToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
+            wordpressSaveInstanceToolStripMenuItem.ForeColor = Color.White;
+            wordpressSaveInstanceToolStripMenuItem.Name = "wordpressSaveInstanceToolStripMenuItem";
+            wordpressSaveInstanceToolStripMenuItem.Size = new Size(239, 22);
+            wordpressSaveInstanceToolStripMenuItem.Text = "Wordpress Save Instance";
+            wordpressSaveInstanceToolStripMenuItem.Click += wordpressSaveInstanceToolStripMenuItem_Click;
+            // 
+            // wordpressRestoreInstanceToolStripMenuItem
+            // 
+            wordpressRestoreInstanceToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
+            wordpressRestoreInstanceToolStripMenuItem.ForeColor = Color.White;
+            wordpressRestoreInstanceToolStripMenuItem.Name = "wordpressRestoreInstanceToolStripMenuItem";
+            wordpressRestoreInstanceToolStripMenuItem.Size = new Size(239, 22);
+            wordpressRestoreInstanceToolStripMenuItem.Text = "Wordpress Restore Instance";
+            wordpressRestoreInstanceToolStripMenuItem.Click += wordpressRestoreInstanceToolStripMenuItem_Click;
+            // 
+            // wordpressDeleteInstanceToolStripMenuItem
+            // 
+            wordpressDeleteInstanceToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
+            wordpressDeleteInstanceToolStripMenuItem.ForeColor = Color.White;
+            wordpressDeleteInstanceToolStripMenuItem.Name = "wordpressDeleteInstanceToolStripMenuItem";
+            wordpressDeleteInstanceToolStripMenuItem.Size = new Size(239, 22);
+            wordpressDeleteInstanceToolStripMenuItem.Text = "Wordpress Delete Instance";
+            wordpressDeleteInstanceToolStripMenuItem.Click += wordpressDeleteInstanceToolStripMenuItem_Click;
             // 
             // wordpressScriptToolStripMenuItem
             // 
             wordpressScriptToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
             wordpressScriptToolStripMenuItem.ForeColor = Color.White;
             wordpressScriptToolStripMenuItem.Name = "wordpressScriptToolStripMenuItem";
-            wordpressScriptToolStripMenuItem.Size = new Size(266, 22);
-            wordpressScriptToolStripMenuItem.Text = "WordPress automatic installation";
-            wordpressScriptToolStripMenuItem.Click += wordpressScriptToolStripMenuItem_Click;
+            wordpressScriptToolStripMenuItem.Size = new Size(239, 22);
+            wordpressScriptToolStripMenuItem.Text = "WordPress New Instance";
+            wordpressScriptToolStripMenuItem.Click += wordpressNewInstanceToolStripMenuItem_Click;
+            // 
+            // backupDatabasesToolStripMenuItem
+            // 
+            backupDatabasesToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
+            backupDatabasesToolStripMenuItem.ForeColor = Color.White;
+            backupDatabasesToolStripMenuItem.Name = "backupDatabasesToolStripMenuItem";
+            backupDatabasesToolStripMenuItem.Size = new Size(239, 22);
+            backupDatabasesToolStripMenuItem.Text = "Backup Databases";
+            backupDatabasesToolStripMenuItem.Click += backupDatabasesToolStripMenuItem_Click;
+            // 
+            // runSqlScriptsToolStripMenuItem
+            // 
+            runSqlScriptsToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
+            runSqlScriptsToolStripMenuItem.ForeColor = Color.White;
+            runSqlScriptsToolStripMenuItem.Name = "runSqlScriptsToolStripMenuItem";
+            runSqlScriptsToolStripMenuItem.Size = new Size(239, 22);
+            runSqlScriptsToolStripMenuItem.Text = "Run sql Scripts";
+            runSqlScriptsToolStripMenuItem.Click += runSqlScriptsToolStripMenuItem_Click;
             // 
             // foldersToolStripMenuItem
             // 
@@ -544,24 +592,6 @@ namespace ZampGUI2
             timer_refreshFormProcess.Interval = 15000;
             timer_refreshFormProcess.Tick += timer_refreshFormProcess_Tick;
             // 
-            // backupDatabasesToolStripMenuItem
-            // 
-            backupDatabasesToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
-            backupDatabasesToolStripMenuItem.ForeColor = Color.White;
-            backupDatabasesToolStripMenuItem.Name = "backupDatabasesToolStripMenuItem";
-            backupDatabasesToolStripMenuItem.Size = new Size(266, 22);
-            backupDatabasesToolStripMenuItem.Text = "Backup Databases";
-            backupDatabasesToolStripMenuItem.Click += backupDatabasesToolStripMenuItem_Click;
-            // 
-            // runSqlScriptsToolStripMenuItem
-            // 
-            runSqlScriptsToolStripMenuItem.BackColor = Color.FromArgb(64, 64, 64);
-            runSqlScriptsToolStripMenuItem.ForeColor = Color.White;
-            runSqlScriptsToolStripMenuItem.Name = "runSqlScriptsToolStripMenuItem";
-            runSqlScriptsToolStripMenuItem.Size = new Size(266, 22);
-            runSqlScriptsToolStripMenuItem.Text = "Run sql Scripts";
-            runSqlScriptsToolStripMenuItem.Click += runSqlScriptsToolStripMenuItem_Click;
-            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(8F, 17F);
@@ -649,5 +679,8 @@ namespace ZampGUI2
         private ToolStripMenuItem zampGUIIniToolStripMenuItem;
         private ToolStripMenuItem backupDatabasesToolStripMenuItem;
         private ToolStripMenuItem runSqlScriptsToolStripMenuItem;
+        private ToolStripMenuItem wordpressSaveInstanceToolStripMenuItem;
+        private ToolStripMenuItem wordpressRestoreInstanceToolStripMenuItem;
+        private ToolStripMenuItem wordpressDeleteInstanceToolStripMenuItem;
     }
 }

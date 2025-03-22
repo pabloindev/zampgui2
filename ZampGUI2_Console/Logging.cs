@@ -21,25 +21,34 @@ namespace ZampGUI2_Console
             filePath = Path.Combine(logDirectory, $"log_{DateTime.Now:yyyyMMdd}.txt");
         }
 
-        public void logouput(string message, bool addNewLine = true)
+        public void write(string message)
         {
             string fullMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
-            if(addNewLine)
-            {
-                File.AppendAllText(filePath, fullMessage + Environment.NewLine);
-                Console.WriteLine(fullMessage);
-            }
-            else
-            {
-                File.AppendAllText(filePath, fullMessage);
-                Console.Write(fullMessage);
-            }
+            File.AppendAllText(filePath, fullMessage);
+            Console.Write(fullMessage);
         }
-
-        public void logfile(string message)
+        public void writeLine(string message)
         {
             string fullMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
             File.AppendAllText(filePath, fullMessage + Environment.NewLine);
+            Console.WriteLine(fullMessage);
+        }
+        public void writeFile(string message)
+        {
+            string fullMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
+            File.AppendAllText(filePath, fullMessage + Environment.NewLine);
+        }
+        public void writeError(string message)
+        {
+            string fullMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
+            File.AppendAllText(filePath, fullMessage);
+            Console.Error.Write(fullMessage);
+        }
+        public void writeErrorLine(string message)
+        {
+            string fullMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
+            File.AppendAllText(filePath, fullMessage + Environment.NewLine);
+            Console.Error.WriteLine(fullMessage);
         }
 
         public void logerror(string message, bool addNewLine = true)

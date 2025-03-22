@@ -442,7 +442,7 @@ namespace ZampGUI2
             }
             frm2.Close();
         }
-        
+
         private void apacheFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("explorer.exe", percorsi.apache_folder.Replace("/", "\\"));
@@ -519,7 +519,7 @@ namespace ZampGUI2
             helper.openFileWithEditor(config.Read("ImpostazioniGenerali", "editor"), percorsi.zampgui_ini);
         }
 
-        private void wordpressScriptToolStripMenuItem_Click(object sender, EventArgs e)
+        private void wordpressNewInstanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // ---------------------- vecchia versione lanciando file .bat ----------------------
             //var envVars = new Dictionary<string, string>
@@ -545,7 +545,7 @@ namespace ZampGUI2
                 { "HTTPPORT", config.Read("Porte", "httpPort")}
             };
 
-            bool result = helper.runZampGUI_Console("wordpressinstallation", envVars, new string[] { });
+            bool result = helper.runZampGUI_Console("wpnewinstance", envVars, new string[] { });
         }
         private void backupDatabasesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -578,7 +578,7 @@ namespace ZampGUI2
                     // Creazione di una lista per memorizzare i file selezionati
                     List<string> fileList = new List<string>(selectedFiles);
 
-                    if(fileList.Count() > 0)
+                    if (fileList.Count() > 0)
                     {
                         var envVars = new Dictionary<string, string>
                         {
@@ -588,6 +588,22 @@ namespace ZampGUI2
                     }
                 }
             }
+        }
+
+        private void wordpressRestoreInstanceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var envVars = new Dictionary<string, string>();
+            bool result = helper.runZampGUI_Console("wprestoreinstance", envVars, new string[] { });
+        }
+        private void wordpressDeleteInstanceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var envVars = new Dictionary<string, string>();
+            bool result = helper.runZampGUI_Console("wpdeleteinstance", envVars, new string[] { });
+        }
+        private void wordpressSaveInstanceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var envVars = new Dictionary<string, string>();
+            bool result = helper.runZampGUI_Console("wpsaveinstance", envVars, new string[] { });
         }
         #endregion
     }

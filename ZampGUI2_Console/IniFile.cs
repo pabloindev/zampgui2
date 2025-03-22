@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace MyApplicazione
+namespace ZampGUI2_Console
 {
     public class IniFile
     {
@@ -18,7 +18,7 @@ namespace MyApplicazione
         {
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException("Il file .ini non è stato trovato.", filePath);
+                throw new FileNotFoundException("file .ini not found.", filePath);
             }
 
             _data = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);

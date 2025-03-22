@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using ZampGUI2_Console;
 
@@ -7,7 +8,7 @@ class Program
     static int Main(string[] args)
     {
         int exitcode = 0;
-        Logging logging = new Logging();
+        Logging log = new Logging();
         try
         {
             // Verifica se il parametro obbligatorio typeofjob è presente
@@ -18,42 +19,83 @@ class Program
             }
 
             // Inizializza il logging per il giorno corrente
-            logging.logouput("Starting zampgui_console.");
+            log.writeLine("Starting zampgui_console.");
 
             // Cancellazione dei log più vecchi di 30 giorni
-            logging.CleanOldLogs(30);
+            log.CleanOldLogs(30);
 
             // Rileva il tipo di job dal primo parametro
             string typeOfJob = args[0].ToLower(); // trasformazione in minuscolo per un confronto uniforme
-            logging.logfile($"arg[0]: {typeOfJob}");
+            log.writeFile($"arg[0]: {typeOfJob}");
 
             // Chiamata delle funzioni specifiche in base al typeofjob
             switch (typeOfJob)
             {
-                case "wordpressinstallation":
-                    logging.logouput("starting wordpress automatic installation");
-                    RunWPInstallation runWPInstallation = new RunWPInstallation(args);
+                case "wpnewinstance":
+                    if (Debugger.IsAttached)
+                    {
+                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                        Environment.SetEnvironmentVariable("CURRENT_VERS", "84");
+                        Environment.SetEnvironmentVariable("HTTPPORT", "80");
+                    }
+
+                    log.writeLine("starting wordpress automatic installation");
+                    WpNewInstance runWPInstallation = new WpNewInstance(args, log);
                     runWPInstallation.run();
                     break;
                 case "backupdatabases":
-                    logging.logouput("starting backup databases");
-                    RunBackupDB runBackupDB = new RunBackupDB(args);
+                    if (Debugger.IsAttached)
+                    {
+                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                        Environment.SetEnvironmentVariable("CURRENT_VERS", "84");
+                        Environment.SetEnvironmentVariable("MARIADBBIN", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full\Apps\mariadb\bin");
+                    }
+                    log.writeLine("starting backup databases");
+                    RunBackupDB runBackupDB = new RunBackupDB(args, log);
                     runBackupDB.run();
                     break;
                 case "sqlscripts":
-                    logging.logouput("starting running sql scripts");
-                    RunSQLScripts runSQLScripts = new RunSQLScripts(args);
+                    if (Debugger.IsAttached)
+                    {
+                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                        Environment.SetEnvironmentVariable("MARIADBBIN", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full\Apps\mariadb\bin");
+                    }
+                    log.writeLine("starting running sql scripts");
+                    RunSQLScripts runSQLScripts = new RunSQLScripts(args, log);
                     runSQLScripts.run();
                     break;
+
+                case "wprestoreinstance":
+                    if (Debugger.IsAttached)
+                    {
+                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                    }
+                    log.writeLine("starting wordpress restore instance");
+                    break;
+                case "wpdeleteinstance":
+                    if (Debugger.IsAttached)
+                    {
+                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                    }
+                    log.writeLine("starting wordpress delete instance");
+                    break;
+                case "wpsaveinstance":
+                    if (Debugger.IsAttached)
+                    {
+                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                    }
+                    log.writeLine("starting wordpress save instance");
+                    break;
+
                 default:
-                    logging.logouput($"error");
+                    log.writeLine($"error");
                     return 2; // codice di errore per job non riconosciuto
             }
         }
         catch (Exception ex)
         {
             // Gestione generica degli errori: scrive l'errore sullo standard error
-            logging.logerror("Errore durante l'esecuzione dell'applicazione: " + ex.Message);
+            log.writeErrorLine("Errore durante l'esecuzione dell'applicazione: " + ex.Message);
             exitcode = 99;
         }
 

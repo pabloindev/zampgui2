@@ -12,29 +12,57 @@ namespace ZampGUI2_Console
     class RunBackupDB
     {
         string[] args { get; set; }
-        public RunBackupDB(string[] args)
+        Logging log { get; set; }
+        IniFile ini { get; set; }
+        string ZAMPGUIPATH { get; set; }
+        string CURRENT_VERS { get; set; }
+        string MARIADBBIN { get; set; }
+        public RunBackupDB(string[] args, Logging log)
         {
-            args = args;
+            this.args = args;
+            this.log = log;
+            ZAMPGUIPATH = Environment.GetEnvironmentVariable("ZAMPGUIPATH");
+            if (!Directory.Exists(ZAMPGUIPATH))
+            {
+                throw new Exception($"directory {ZAMPGUIPATH} not found");
+            }
+
+            MARIADBBIN = Environment.GetEnvironmentVariable("MARIADBBIN");
+            if (!Directory.Exists(MARIADBBIN))
+            {
+                throw new Exception($"directory {MARIADBBIN} not found");
+            }
+
+            CURRENT_VERS = Environment.GetEnvironmentVariable("CURRENT_VERS");
+            if(string.IsNullOrEmpty(CURRENT_VERS))
+            {
+                throw new Exception("CURRENT_VERS not set");
+            }
+
+            ini = new IniFile(Path.Combine(ZAMPGUIPATH, "Apps", "ZampGUI2", "config.ini"));
+            
         }
 
         public void run()
         {
             // Parametri per la connessione al server MariaDB.
             // Modifica questi valori in base alla tua configurazione.
-            string dbUser = "root";
-            string dbPass = "root";
+            string dbUser = ini.GetValue("MariaDB", "username");
+            string dbPass = ini.GetValue("MariaDB", "password");
             string dbHost = "localhost";
-
-            string[] nuovoArray = array.Skip(1).ToArray();
-            string combinedPaths = string.Join(" ", args.Select(p => $"\"{p}\""));
 
             // Creazione della stringa di connessione (senza specificare il database)
             string connectionString = $"server={dbHost};user={dbUser};password={dbPass};";
 
             // Definizione della cartella principale di backup, ad esempio "DatabaseBackups"
-            string backupRoot = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DatabaseBackups");
+            string backupRoot = Path.Combine(ZAMPGUIPATH, "DatabaseBackups");
+            if (!Directory.Exists(backupRoot))
+            {
+                Directory.CreateDirectory(backupRoot);
+            }
+
             // Nome della sottocartella corrispondente alla data corrente (formato "yyyyMMdd")
-            string currentDateFolder = DateTime.Now.ToString("yyyyMMdd");
+            string currentDateFolder = DateTime.Now.ToString("yyyy-MM-dd");
             string backupDir = Path.Combine(backupRoot, currentDateFolder);
             if (!Directory.Exists(backupDir))
             {
@@ -76,7 +104,7 @@ namespace ZampGUI2_Console
             foreach (string db in databases)
             {
                 // Creazione del suffisso con l'ora corrente compresa di millisecondi (formato "HHmmssfff")
-                string timestamp = DateTime.Now.ToString("HHmmssfff");
+                string timestamp = DateTime.Now.ToString("HH-mm-ss-fff");
                 // Nome del file SQL: [nomeDatabase]_[timestamp].sql
                 string fileName = $"{db}_{timestamp}.sql";
                 string filePath = Path.Combine(backupDir, fileName);
@@ -88,10 +116,10 @@ namespace ZampGUI2_Console
                 // L'opzione --result-file permette di salvare direttamente il dump nel file specificato.
                 string dumpArguments = $"-u{dbUser} -p{dbPass} -h{dbHost} --add-drop-database --databases {db} --routines --triggers --result-file=\"{filePath}\"";
 
-                Console.WriteLine($"Avvio backup del database: {db}");
+                Console.WriteLine($"Starting backup database: {db}");
                 ProcessStartInfo psi = new ProcessStartInfo
                 {
-                    FileName = "mysqldump",
+                    FileName = MARIADBBIN + "\\mariadb-dump.exe",
                     Arguments = dumpArguments,
                     UseShellExecute = false,
                     CreateNoWindow = true,
@@ -105,57 +133,15 @@ namespace ZampGUI2_Console
                     if (process.ExitCode != 0)
                     {
                         string errorOutput = process.StandardError.ReadToEnd();
-                        Console.Error.WriteLine($"Errore durante il backup del database {db}: {errorOutput}");
+                        log.writeErrorLine($"Error on db {db}: {errorOutput}");
                     }
                     else
                     {
-                        Console.WriteLine($"Backup completato per il database {db}.\nFile salvato in: {filePath}");
+                        log.writeLine($"Backup ok for {db}");
+                        log.writeLine($"New File : {filePath}");
                     }
                 }
             }
         }
-
-
-        
-
-        public bool dbExist()
-        {
-            // Stringa di connessione al server MariaDB
-            string connectionString = "Server=localhost;User ID=root;Password=your_password;";
-
-            // Nome del database da verificare
-            string databaseName = "nome_database";
-
-            // Query per verificare se il database esiste
-            string query = $"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{databaseName}';";
-
-            using (var connection = new MySqlConnection(connectionString))
-            {
-                try
-                {
-                    // Apri la connessione
-                    connection.Open();
-
-                    // Esegui la query
-                    using (var command = new MySqlCommand(query, connection))
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            Console.WriteLine($"Il database '{databaseName}' esiste già.");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Il database '{databaseName}' non esiste.");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Errore: {ex.Message}");
-                }
-            }
-        }
-
     }
 }
