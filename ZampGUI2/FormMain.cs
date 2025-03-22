@@ -146,6 +146,15 @@ namespace ZampGUI2
             }
 
 
+            // se non sono io nascondo voci menu temporanee
+            if(config.Read("ImpostazioniGenerali", "uuid") != "mio")
+            {
+                wordpressRestoreInstanceToolStripMenuItem.Visible = false;
+                wordpressDeleteInstanceToolStripMenuItem.Visible = false;
+                wordpressSaveInstanceToolStripMenuItem.Visible = false;
+            }
+
+
             // se ho una sola versione disponibile è inutile mostrare la voce di menu che mi permette di cambiare versione
             int countfolder = 0;
             string[] arrfolder = config.Read("FolderName", "apachephpvers").Split(',');
@@ -519,6 +528,7 @@ namespace ZampGUI2
             helper.openFileWithEditor(config.Read("ImpostazioniGenerali", "editor"), percorsi.zampgui_ini);
         }
 
+
         private void wordpressNewInstanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // ---------------------- vecchia versione lanciando file .bat ----------------------
@@ -541,6 +551,7 @@ namespace ZampGUI2
             var envVars = new Dictionary<string, string>
             {
                 { "ZAMPGUIPATH", percorsi.pathBase},
+                { "UUID", config.Read("ImpostazioniGenerali", "uuid")},
                 { "CURRENT_VERS", config.Read("FolderName", "currentvers")},
                 { "HTTPPORT", config.Read("Porte", "httpPort")}
             };
@@ -552,6 +563,7 @@ namespace ZampGUI2
             var envVars = new Dictionary<string, string>
             {
                 { "ZAMPGUIPATH", percorsi.pathBase},
+                { "UUID", config.Read("ImpostazioniGenerali", "uuid")},
                 { "CURRENT_VERS", config.Read("FolderName", "currentvers")},
                 { "MARIADBBIN", percorsi.mariadb_bin}
             };
@@ -582,6 +594,8 @@ namespace ZampGUI2
                     {
                         var envVars = new Dictionary<string, string>
                         {
+                            { "ZAMPGUIPATH", percorsi.pathBase},
+                            { "UUID", config.Read("ImpostazioniGenerali", "uuid")},
                             { "MARIADBBIN", percorsi.mariadb_bin}
                         };
                         bool result = helper.runZampGUI_Console("sqlscripts", envVars, fileList.ToArray());
@@ -589,20 +603,31 @@ namespace ZampGUI2
                 }
             }
         }
-
         private void wordpressRestoreInstanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var envVars = new Dictionary<string, string>();
+            var envVars = new Dictionary<string, string>
+            {
+                { "ZAMPGUIPATH", percorsi.pathBase},
+                { "UUID", config.Read("ImpostazioniGenerali", "uuid")}
+            };
             bool result = helper.runZampGUI_Console("wprestoreinstance", envVars, new string[] { });
         }
         private void wordpressDeleteInstanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var envVars = new Dictionary<string, string>();
+            var envVars = new Dictionary<string, string>
+            {
+                { "ZAMPGUIPATH", percorsi.pathBase},
+                { "UUID", config.Read("ImpostazioniGenerali", "uuid")}
+            };
             bool result = helper.runZampGUI_Console("wpdeleteinstance", envVars, new string[] { });
         }
         private void wordpressSaveInstanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var envVars = new Dictionary<string, string>();
+            var envVars = new Dictionary<string, string>
+            {
+                { "ZAMPGUIPATH", percorsi.pathBase},
+                { "UUID", config.Read("ImpostazioniGenerali", "uuid")}
+            };
             bool result = helper.runZampGUI_Console("wpsaveinstance", envVars, new string[] { });
         }
         #endregion

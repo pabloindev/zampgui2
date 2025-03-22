@@ -13,6 +13,8 @@ class Program
         if (Debugger.IsAttached)
         {
             args = ["wpnewinstance"];
+            Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+            Environment.SetEnvironmentVariable("UUID", "mio");
         }
 
         try
@@ -40,7 +42,6 @@ class Program
                 case "wpnewinstance":
                     if (Debugger.IsAttached)
                     {
-                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
                         Environment.SetEnvironmentVariable("CURRENT_VERS", "84");
                         Environment.SetEnvironmentVariable("HTTPPORT", "80");
                     }
@@ -52,7 +53,6 @@ class Program
                 case "backupdatabases":
                     if (Debugger.IsAttached)
                     {
-                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
                         Environment.SetEnvironmentVariable("CURRENT_VERS", "84");
                         Environment.SetEnvironmentVariable("MARIADBBIN", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full\Apps\mariadb\bin");
                     }
@@ -63,7 +63,6 @@ class Program
                 case "sqlscripts":
                     if (Debugger.IsAttached)
                     {
-                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
                         Environment.SetEnvironmentVariable("MARIADBBIN", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full\Apps\mariadb\bin");
                     }
                     log.writeLine("starting running sql scripts");
@@ -74,21 +73,21 @@ class Program
                 case "wprestoreinstance":
                     if (Debugger.IsAttached)
                     {
-                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                        //Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
                     }
                     log.writeLine("starting wordpress restore instance");
                     break;
                 case "wpdeleteinstance":
                     if (Debugger.IsAttached)
                     {
-                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                        //Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
                     }
                     log.writeLine("starting wordpress delete instance");
                     break;
                 case "wpsaveinstance":
                     if (Debugger.IsAttached)
                     {
-                        Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                        //Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
                     }
                     log.writeLine("starting wordpress save instance");
                     break;

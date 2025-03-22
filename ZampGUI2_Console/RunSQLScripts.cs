@@ -17,11 +17,14 @@ namespace ZampGUI2_Console
         Logging log { get; set; }
         IniFile ini { get; set; }
         string ZAMPGUIPATH { get; set; }
+        string UUID { get; set; }
         string MARIADBBIN { get; set; }
         public RunSQLScripts(string[] args, Logging log)
         {
             this.args = args;
             this.log = log;
+            UUID = Environment.GetEnvironmentVariable("UUID");
+
             ZAMPGUIPATH = Environment.GetEnvironmentVariable("ZAMPGUIPATH");
 
             if (!Directory.Exists(ZAMPGUIPATH))
@@ -58,57 +61,7 @@ namespace ZampGUI2_Console
 
             foreach (string sqlFile in sqlfiles)
             {
-                if (!File.Exists(sqlFile))
-                {
-                    throw new Exception($"Error: File '{sqlFile}' does not exist.");
-                }
-
-                log.writeLine($"Executing SQL file: {sqlFile}");
-
-                // Create a temporary batch file to handle the redirection
-                string batchFilePath = Path.Combine(Path.GetTempPath(), $"mariadb_script_{Guid.NewGuid()}.cmd");
-
-                // Create the batch file content
-                string batchContent = $"\"{mariadbexe}\" -u{dbUser} -p{dbPass} -h{dbHost} < \"{sqlFile}\"";
-                File.WriteAllText(batchFilePath, batchContent);
-
-                ProcessStartInfo psi = new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    Arguments = $"/c \"{batchFilePath}\"",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = false
-                };
-
-                using (Process process = Process.Start(psi))
-                {
-                    string output = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
-
-                    process.WaitForExit();
-
-                    // Clean up the temporary batch file
-                    try { File.Delete(batchFilePath); } catch { /* Ignore cleanup errors */ }
-
-                    if (process.ExitCode != 0)
-                    {
-                        log.writeError($"Error executing file: {sqlFile}. Exit code: {process.ExitCode}");
-                        if (!string.IsNullOrWhiteSpace(error))
-                        {
-                            log.writeError("Error details: " + error);
-                        }
-                    }
-                    else
-                    {
-                        log.writeLine($"Successfully executed file: {sqlFile}.");
-                        if (!string.IsNullOrWhiteSpace(output))
-                        {
-                            log.writeLine("Client output: " + output);
-                        }
-                    }
-                }
+                Helper.runsqlscript(sqlFile, mariadbexe, dbUser, dbPass, dbHost, log);
             }
 
         }

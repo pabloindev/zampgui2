@@ -1,7 +1,10 @@
 ﻿using MySqlConnector;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -84,5 +87,79 @@ namespace ZampGUI2_Console
                 }
             }
         }
+
+        public static void runsqlscript(string sqlFile, string mariadbexe, string dbUser, string dbPass, string dbHost, Logging log)
+        {
+            if (!File.Exists(sqlFile))
+            {
+                throw new Exception($"Error: File '{sqlFile}' does not exist.");
+            }
+
+            log.writeLine($"Executing SQL file: {sqlFile}");
+
+            // Create a temporary batch file to handle the redirection
+            string batchFilePath = Path.Combine(Path.GetTempPath(), $"mariadb_script_{Guid.NewGuid()}.cmd");
+
+            // Create the batch file content
+            string batchContent = $"\"{mariadbexe}\" -u{dbUser} -p{dbPass} -h{dbHost} < \"{sqlFile}\"";
+            File.WriteAllText(batchFilePath, batchContent);
+
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/c \"{batchFilePath}\"",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = false
+            };
+
+            using (Process process = Process.Start(psi))
+            {
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
+
+                process.WaitForExit();
+
+                // Clean up the temporary batch file
+                try { File.Delete(batchFilePath); } catch { /* Ignore cleanup errors */ }
+
+                if (process.ExitCode != 0)
+                {
+                    log.writeError($"Error executing file: {sqlFile}. Exit code: {process.ExitCode}");
+                    if (!string.IsNullOrWhiteSpace(error))
+                    {
+                        log.writeError("Error details: " + error);
+                    }
+                }
+                else
+                {
+                    log.writeLine($"Successfully executed file: {sqlFile}.");
+                    if (!string.IsNullOrWhiteSpace(output))
+                    {
+                        log.writeLine("Client output: " + output);
+                    }
+                }
+            }
+        }
+
+        public static void rundbquery(string query, string server, string user, string password, string databaseName)
+        {
+            // Stringa di connessione al server MariaDB
+            string connectionString = $"Server={server};Database={databaseName};User ID={user};Password={password};";
+
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                // Apri la connessione
+                connection.Open();
+
+                // Esegui la query
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }

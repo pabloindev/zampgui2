@@ -15,12 +15,15 @@ namespace ZampGUI2_Console
         Logging log { get; set; }
         IniFile ini { get; set; }
         string ZAMPGUIPATH { get; set; }
+        string UUID { get; set; }
         string CURRENT_VERS { get; set; }
         string MARIADBBIN { get; set; }
         public RunBackupDB(string[] args, Logging log)
         {
             this.args = args;
             this.log = log;
+            UUID = Environment.GetEnvironmentVariable("UUID");
+
             ZAMPGUIPATH = Environment.GetEnvironmentVariable("ZAMPGUIPATH");
             if (!Directory.Exists(ZAMPGUIPATH))
             {
