@@ -12,9 +12,12 @@ class Program
 
         if (Debugger.IsAttached)
         {
-            args = ["wpnewinstance"];
+            args = [
+                ""
+            ];
             Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
             Environment.SetEnvironmentVariable("UUID", "mio");
+            Environment.SetEnvironmentVariable("CURRENT_VERS", "84");
         }
 
         try
@@ -39,21 +42,9 @@ class Program
             // Chiamata delle funzioni specifiche in base al typeofjob
             switch (typeOfJob)
             {
-                case "wpnewinstance":
-                    if (Debugger.IsAttached)
-                    {
-                        Environment.SetEnvironmentVariable("CURRENT_VERS", "84");
-                        Environment.SetEnvironmentVariable("HTTPPORT", "80");
-                    }
-
-                    log.writeLine("starting wordpress automatic installation");
-                    WpNewInstance runWPInstallation = new WpNewInstance(args, log);
-                    runWPInstallation.run();
-                    break;
                 case "backupdatabases":
                     if (Debugger.IsAttached)
                     {
-                        Environment.SetEnvironmentVariable("CURRENT_VERS", "84");
                         Environment.SetEnvironmentVariable("MARIADBBIN", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full\Apps\mariadb\bin");
                     }
                     log.writeLine("starting backup databases");
@@ -69,27 +60,42 @@ class Program
                     RunSQLScripts runSQLScripts = new RunSQLScripts(args, log);
                     runSQLScripts.run();
                     break;
-
-                case "wprestoreinstance":
+                case "wpnewinstance":
                     if (Debugger.IsAttached)
                     {
-                        //Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                        Environment.SetEnvironmentVariable("HTTPPORT", "80");
+                    }
+
+                    log.writeLine("starting wordpress automatic installation");
+                    WpNewInstance runWPInstallation = new WpNewInstance(args, log);
+                    runWPInstallation.run();
+                    break;
+                case "wprestoreinstance":
+                    if(Debugger.IsAttached)
+                    {
+                        Environment.SetEnvironmentVariable("MARIADBBIN", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full\Apps\mariadb\bin");
                     }
                     log.writeLine("starting wordpress restore instance");
+                    WpRestoreInstance wprestore = new WpRestoreInstance(args, log);
+                    wprestore.run();
                     break;
                 case "wpdeleteinstance":
                     if (Debugger.IsAttached)
                     {
-                        //Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                        Environment.SetEnvironmentVariable("MARIADBBIN", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full\Apps\mariadb\bin");
                     }
                     log.writeLine("starting wordpress delete instance");
+                    WpDeleteInstance wpdelete = new WpDeleteInstance(args, log);
+                    wpdelete.run();
                     break;
                 case "wpsaveinstance":
                     if (Debugger.IsAttached)
                     {
-                        //Environment.SetEnvironmentVariable("ZAMPGUIPATH", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full");
+                        Environment.SetEnvironmentVariable("MARIADBBIN", @"C:\Users\pabloindev\Desktop\varie\portable\rollingzampv2\ZampGUI_2.0.0_full\Apps\mariadb\bin");
                     }
                     log.writeLine("starting wordpress save instance");
+                    WpSaveInstance wpsave = new WpSaveInstance(args, log);
+                    wpsave.run();
                     break;
 
                 default:
@@ -100,10 +106,12 @@ class Program
         catch (Exception ex)
         {
             // Gestione generica degli errori: scrive l'errore sullo standard error
-            log.writeErrorLine("Errore durante l'esecuzione dell'applicazione: " + ex.Message);
+            log.writeErrorLine(ex.Message);
             exitcode = 99;
         }
 
+        log.writeLine("Press a key to continue...");
+        Console.ReadKey();
         return exitcode;
     }
 

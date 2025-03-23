@@ -15,31 +15,30 @@ namespace ZampGUI2_Console
         Logging log { get; set; }
         IniFile ini { get; set; }
         string ZAMPGUIPATH { get; set; }
-        string UUID { get; set; }
         string CURRENT_VERS { get; set; }
         string MARIADBBIN { get; set; }
         public RunBackupDB(string[] args, Logging log)
         {
             this.args = args;
             this.log = log;
-            UUID = Environment.GetEnvironmentVariable("UUID");
-
+            //UUID = Environment.GetEnvironmentVariable("UUID");
             ZAMPGUIPATH = Environment.GetEnvironmentVariable("ZAMPGUIPATH");
+            MARIADBBIN = Environment.GetEnvironmentVariable("MARIADBBIN");
+            CURRENT_VERS = Environment.GetEnvironmentVariable("CURRENT_VERS");
+            
+
             if (!Directory.Exists(ZAMPGUIPATH))
             {
-                throw new Exception($"directory {ZAMPGUIPATH} not found");
+                throw new Exception($"directory ZAMPGUIPATH {ZAMPGUIPATH} not found");
+            }
+            if (!int.TryParse(CURRENT_VERS, out _))
+            {
+                throw new Exception($"value CURRENT_VERS {CURRENT_VERS} not valid");
             }
 
-            MARIADBBIN = Environment.GetEnvironmentVariable("MARIADBBIN");
             if (!Directory.Exists(MARIADBBIN))
             {
-                throw new Exception($"directory {MARIADBBIN} not found");
-            }
-
-            CURRENT_VERS = Environment.GetEnvironmentVariable("CURRENT_VERS");
-            if(string.IsNullOrEmpty(CURRENT_VERS))
-            {
-                throw new Exception("CURRENT_VERS not set");
+                throw new Exception($"directory MARIADB bin {MARIADBBIN} not found");
             }
 
             ini = new IniFile(Path.Combine(ZAMPGUIPATH, "Apps", "ZampGUI2", "config.ini"));
@@ -72,36 +71,8 @@ namespace ZampGUI2_Console
                 Directory.CreateDirectory(backupDir);
             }
 
-            // Elenco dei database di sistema da escludere dal backup
-            var excludedDatabases = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-            {
-                "information_schema",
-                "mysql",
-                "performance_schema",
-                "sys",
-                "phpmyadmin"
-            };
-
             // Recupero della lista di database tramite la query SHOW DATABASES
-            List<string> databases = new List<string>();
-            using (var connection = new MySqlConnection(connectionString))
-            {
-                connection.Open();
-                using (var command = new MySqlCommand("SHOW DATABASES;", connection))
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string dbName = reader.GetString(0);
-                            if (!excludedDatabases.Contains(dbName))
-                            {
-                                databases.Add(dbName);
-                            }
-                        }
-                    }
-                }
-            }
+            string[] databases = Helper.GetAlldb(dbHost, dbUser, dbPass);
 
             // Per ogni database valido viene eseguito il backup tramite mysqldump.
             foreach (string db in databases)
@@ -119,7 +90,7 @@ namespace ZampGUI2_Console
                 // L'opzione --result-file permette di salvare direttamente il dump nel file specificato.
                 string dumpArguments = $"-u{dbUser} -p{dbPass} -h{dbHost} --add-drop-database --databases {db} --routines --triggers --result-file=\"{filePath}\"";
 
-                Console.WriteLine($"Starting backup database: {db}");
+                log.writeLine($"Starting backup database: {db}");
                 ProcessStartInfo psi = new ProcessStartInfo
                 {
                     FileName = MARIADBBIN + "\\mariadb-dump.exe",

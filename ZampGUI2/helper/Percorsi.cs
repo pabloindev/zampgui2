@@ -45,7 +45,7 @@ namespace ZampGUI2.helper
         {
             get
             {
-                string result = Path.Combine(pathBase, "Apps", "ZampGUI_Console", "ZampGUI_Console.exe");
+                string result = Path.Combine(pathBase, "Apps", "ZampGUI2_Console", "ZampGUI2_Console.exe");
                 return result;
             }
         }
@@ -53,7 +53,7 @@ namespace ZampGUI2.helper
         {
             get
             {
-                string result = Path.Combine(pathBase, "Apps", "ZampGUI_Console");
+                string result = Path.Combine(pathBase, "Apps", "ZampGUI2_Console");
                 return result;
             }
         }

@@ -17,26 +17,28 @@ namespace ZampGUI2_Console
         Logging log { get; set; }
         IniFile ini { get; set; }
         string ZAMPGUIPATH { get; set; }
-        string UUID { get; set; }
         string MARIADBBIN { get; set; }
+        string CURRENT_VERS { get; set; }
         public RunSQLScripts(string[] args, Logging log)
         {
             this.args = args;
             this.log = log;
-            UUID = Environment.GetEnvironmentVariable("UUID");
-
+            //UUID = Environment.GetEnvironmentVariable("UUID");
+            MARIADBBIN = Environment.GetEnvironmentVariable("MARIADBBIN");
             ZAMPGUIPATH = Environment.GetEnvironmentVariable("ZAMPGUIPATH");
+            CURRENT_VERS = Environment.GetEnvironmentVariable("CURRENT_VERS");
 
             if (!Directory.Exists(ZAMPGUIPATH))
             {
-                throw new Exception($"directory {ZAMPGUIPATH} not found");
+                throw new Exception($"directory ZAMPGUIPATH {ZAMPGUIPATH} not found");
             }
-
-            MARIADBBIN = Environment.GetEnvironmentVariable("MARIADBBIN");
-
+            if (!int.TryParse(CURRENT_VERS, out _))
+            {
+                throw new Exception($"value CURRENT_VERS {CURRENT_VERS} not valid");
+            }
             if (!Directory.Exists(MARIADBBIN))
             {
-                throw new Exception($"directory {MARIADBBIN} not found");
+                throw new Exception($"directory MARIADB bin {MARIADBBIN} not found");
             }
 
             ini = new IniFile(Path.Combine(ZAMPGUIPATH, "Apps", "ZampGUI2", "config.ini"));
@@ -57,13 +59,12 @@ namespace ZampGUI2_Console
             string mariadbexe = Path.Combine(MARIADBBIN, "mariadb.exe");
             //string combinedPaths = string.Join(" ", args.Select(p => $"\"{p}\""));
 
-            Console.WriteLine("Starting SQL files execution on MariaDB server...");
+            log.writeLine("Starting SQL files execution on MariaDB server...");
 
             foreach (string sqlFile in sqlfiles)
             {
                 Helper.runsqlscript(sqlFile, mariadbexe, dbUser, dbPass, dbHost, log);
             }
-
         }
     }
 

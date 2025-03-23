@@ -28,13 +28,13 @@ namespace ZampGUI2_Console
             }
 
             // Check length constraints
-            if (input.Length < 3 || input.Length > 25)
+            if (input.Length < 3 || input.Length > 50)
             {
-                return "Error: The string must be between 3 and 25 characters long.";
+                return "Error: The string must be between 3 and 50 characters long.";
             }
 
             // Check if the string starts with a letter and contains only alphanumeric characters
-            if (!Regex.IsMatch(input, @"^[a-zA-Z][a-zA-Z0-9]*$"))
+            if (!Regex.IsMatch(input, @"^[a-zA-Z][a-z_A-Z0-9]*$"))
             {
                 return "Error: The string must start with a letter and contain only alphanumeric characters.";
             }
@@ -159,6 +159,74 @@ namespace ZampGUI2_Console
                     command.ExecuteNonQuery();
                 }
             }
+        }
+
+        /*
+        // Eseguire una query semplice
+        var result1 = DatabaseService.ExecuteQuery(connectionString, "SELECT * FROM users WHERE age > @age",
+            new List<MySqlParameter> { new MySqlParameter("@age", 18) });
+
+        // Eseguire una query complessa
+        var result2 = DatabaseService.ExecuteQuery(connectionString,"SELECT name, email, COUNT(*) AS total FROM orders GROUP BY name, email");
+         */
+        public static List<Dictionary<string, object>> runselectquery(string connectionString, string query, List<MySqlParameter> parameters = null)
+        {
+            var results = new List<Dictionary<string, object>>();
+
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    if (parameters != null)
+                    {
+                        command.Parameters.AddRange(parameters.ToArray());
+                    }
+
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var row = new Dictionary<string, object>();
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                row[reader.GetName(i)] = reader.GetValue(i);
+                            }
+
+                            results.Add(row);
+                        }
+                    }
+                }
+            }
+            return results;
+        }
+
+        public static string[] GetAlldb(string server, string userId, string password)
+        {
+            string[] ignoredb = { "information_schema","mysql","performance_schema","sys","phpmyadmin"};
+            List<string> databases = new List<string>();
+            string query = "SHOW DATABASES";
+            string connectionString = $"Server={server};User ID={userId};Password={password};";
+
+            var results = runselectquery(connectionString, query);
+            foreach (var row in results)
+            {
+                string name = row["Database"].ToString();
+                if (!ignoredb.Contains(name))
+                    databases.Add(name);
+            }
+
+            return databases.ToArray();
+        }
+
+        public static string[] GetAllWPFolder(string folderPath)
+        {
+            string[] arrdir = Directory.GetDirectories(folderPath)
+                       .Where(dir => File.Exists(Path.Combine(dir, "wp-config.php")))
+                       .Select(Path.GetFileName)
+                       .ToArray();
+            return arrdir;
         }
 
     }

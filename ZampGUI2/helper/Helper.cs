@@ -330,7 +330,14 @@ namespace ZampGUI2.helper
                     pathprocesso = Path.Combine(percorsi.mariadb_bin, nome_processo + ".exe");
 
                     await LaunchServerProcessAsync(pathprocesso, percorsi.mariadb_bin, envVars, msg => {
-                        this.form.textBoxOuput.AppendText(msg + Environment.NewLine);
+                        try
+                        {
+                            this.form.textBoxOuput.AppendText(msg + Environment.NewLine);
+                        }
+                        catch (Exception ex)
+                        {
+                            
+                        }
                     });
                     break;
                 case "httpd":
@@ -346,7 +353,14 @@ namespace ZampGUI2.helper
                     pathprocesso = Path.Combine(percorsi.apache_bin, nome_processo + ".exe");
 
                     await LaunchServerProcessAsync(pathprocesso, percorsi.apache_bin, envVars, msg => {
-                        this.form.textBoxOuput.AppendText(msg + Environment.NewLine);
+                        try
+                        {
+                            this.form.textBoxOuput.AppendText(msg + Environment.NewLine);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
                     });
                     break;
             }

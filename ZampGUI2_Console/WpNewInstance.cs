@@ -63,7 +63,7 @@ namespace ZampGUI2_Console
 
             // Richiesta del nome del sito
             log.write("Enter the website name: ");
-            string websiteName = Console.ReadLine();
+            string websiteName = Console.ReadLine().ToLower();
             serr = Helper.nameOK(websiteName); // il valore deve rispettare certi requisiti
             if (serr != "")
             {
@@ -125,7 +125,13 @@ namespace ZampGUI2_Console
             log.write("Enter your desired language (default: en_US): ");
             string wpLanguageInput = Console.ReadLine();
             string wpLocale = string.IsNullOrWhiteSpace(wpLanguageInput) ? "en_US" : wpLanguageInput;
-            
+
+
+            //modalita per scaricare una nuova lingua e attivarla
+            //comandi_create_wp_cli.Add(path_wp + " language core install " + lang);
+            //comandi_create_wp_cli.Add(path_wp + " site switch-language " + lang);
+
+
 
             // Altri parametri: versione e opzioni
             log.writeLine("Enter the WordPress version to install. For a complete List visit: https://wordpress.org/download/releases/");
@@ -270,6 +276,11 @@ namespace ZampGUI2_Console
 
             if(UUID == "mio")
             {
+                // modalità per scaricare un nuovo plugine e tema
+                //comandi_create_wp_cli.Add(path_wp + " plugin install custom-css-js --activate");
+                //comandi_create_wp_cli.Add(path_wp + " theme install " + cv.wpop.txtThemeList);
+
+
                 log.writeLine("************* MIO *************");
                 //permalink
                 string scommand = "option update permalink_structure /%postname%/";
@@ -326,46 +337,51 @@ namespace ZampGUI2_Console
                     throw new Exception("Error while executing " + scommand);
                 }
 
-                scommand = "option update thumbnail_size_w 0";
-                log.writeLine("running wp " + scommand);
-                if (wphelper.RunWpCommand(scommand, siteDir) != 0)
+                log.write("stop WordPress from generating different image sizes ? [Yes/no] (default yes): ");
+                string stop_generating_images_diffsizes = Console.ReadLine().Trim();
+                if (string.IsNullOrEmpty(stop_generating_images_diffsizes) || stop_generating_images_diffsizes == "yes")
                 {
-                    throw new Exception("Error while executing " + scommand);
-                }
+                    scommand = "option update thumbnail_size_w 0";
+                    log.writeLine("running wp " + scommand);
+                    if (wphelper.RunWpCommand(scommand, siteDir) != 0)
+                    {
+                        throw new Exception("Error while executing " + scommand);
+                    }
 
-                scommand = "option update thumbnail_size_h 0";
-                log.writeLine("running wp " + scommand);
-                if (wphelper.RunWpCommand(scommand, siteDir) != 0)
-                {
-                    throw new Exception("Error while executing " + scommand);
-                }
+                    scommand = "option update thumbnail_size_h 0";
+                    log.writeLine("running wp " + scommand);
+                    if (wphelper.RunWpCommand(scommand, siteDir) != 0)
+                    {
+                        throw new Exception("Error while executing " + scommand);
+                    }
 
-                scommand = "option update medium_size_w 0";
-                log.writeLine("running wp " + scommand);
-                if (wphelper.RunWpCommand(scommand, siteDir) != 0)
-                {
-                    throw new Exception("Error while executing " + scommand);
-                }
-                
-                scommand = "option update medium_size_h 0";
-                log.writeLine("running wp " + scommand);
-                if (wphelper.RunWpCommand(scommand, siteDir) != 0)
-                {
-                    throw new Exception("Error while executing " + scommand);
-                }
+                    scommand = "option update medium_size_w 0";
+                    log.writeLine("running wp " + scommand);
+                    if (wphelper.RunWpCommand(scommand, siteDir) != 0)
+                    {
+                        throw new Exception("Error while executing " + scommand);
+                    }
 
-                scommand = "option update large_size_w 0";
-                log.writeLine("running wp " + scommand);
-                if (wphelper.RunWpCommand(scommand, siteDir) != 0)
-                {
-                    throw new Exception("Error while executing " + scommand);
-                }
+                    scommand = "option update medium_size_h 0";
+                    log.writeLine("running wp " + scommand);
+                    if (wphelper.RunWpCommand(scommand, siteDir) != 0)
+                    {
+                        throw new Exception("Error while executing " + scommand);
+                    }
 
-                scommand = "option update large_size_h 0";
-                log.writeLine("running wp " + scommand);
-                if (wphelper.RunWpCommand(scommand, siteDir) != 0)
-                {
-                    throw new Exception("Error while executing " + scommand);
+                    scommand = "option update large_size_w 0";
+                    log.writeLine("running wp " + scommand);
+                    if (wphelper.RunWpCommand(scommand, siteDir) != 0)
+                    {
+                        throw new Exception("Error while executing " + scommand);
+                    }
+
+                    scommand = "option update large_size_h 0";
+                    log.writeLine("running wp " + scommand);
+                    if (wphelper.RunWpCommand(scommand, siteDir) != 0)
+                    {
+                        throw new Exception("Error while executing " + scommand);
+                    }
                 }
 
                 
@@ -381,11 +397,10 @@ namespace ZampGUI2_Console
                 }
 
 
-                int countpost = 10;
-                log.write("Add new posts? [yes/no] (default: yes): ");
-                string scelta = Console.ReadLine();
-                scelta = string.IsNullOrWhiteSpace(scelta) ? "yes" : scelta;
-                if(scelta == "yes")
+                log.write("Do you want to generate sample posts? Please enter the number, or leave the field blank: ");
+                string str_countpost = Console.ReadLine().Trim();
+                int countpost = 0;
+                if(Int32.TryParse(str_countpost, out countpost))
                 {
                     for (int i = 0; i < countpost; i++)
                     {
@@ -409,15 +424,15 @@ namespace ZampGUI2_Console
                         System.IO.File.Delete(path_txtcontent);
                     }
                 }
-                
+
 
                 log.write("Import media? Insert path or leave blank : ");
-                scelta = Console.ReadLine();
-                if(Directory.Exists(scelta))
+                string pathmedia = Console.ReadLine().Trim();
+                if(Directory.Exists(pathmedia))
                 {
                     var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
 
-                    foreach (var imagePath in Directory.GetFiles(scelta))
+                    foreach (var imagePath in Directory.GetFiles(pathmedia))
                     {
                         var extension = Path.GetExtension(imagePath).ToLower();
                         if (!allowedExtensions.Contains(extension)) continue;
@@ -470,11 +485,6 @@ namespace ZampGUI2_Console
             log.writeLine($"Database: {websiteName}");
             log.writeLine($"Directory: {siteDir}");
             log.writeLine("******************************************************");
-            log.writeLine("Press a key to continue...");
-            Console.ReadKey();
         }
-
-
-        
     }
 }

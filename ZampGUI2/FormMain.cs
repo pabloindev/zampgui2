@@ -531,23 +531,12 @@ namespace ZampGUI2
 
         private void wordpressNewInstanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // ---------------------- vecchia versione lanciando file .bat ----------------------
-            //var envVars = new Dictionary<string, string>
-            //{
-            //    { "ZAMPGUIPATH", percorsi.pathBase },
-            //    { "CURRENT_VERS", config.Read("FolderName", "currentvers") },
-            //    { "HTTPPORT", config.Read("Porte", "httpPort") }
-            //};
-            //string workingdir = percorsi.apache_htdocs;
-            //string batFilePath = Path.Combine(config.Read("ImpostazioniGenerali", "pathBase"), "Scripts", "template", "wptemplate.bat");
-            //if (!helper.processo_in_esecuzione("mariadbd") || !helper.processo_in_esecuzione("httpd"))
-            //{
-            //    MessageBox.Show("Web Server and database not available - Please Start Apche and Mariadb");
-            //}
-            //else
-            //{
-            //    helper.LaunchBatchFileVisible(batFilePath, workingdir, envVars);
-            //}
+            if (!helper.processo_in_esecuzione("httpd") || !helper.processo_in_esecuzione("mariadbd"))
+            {
+                MessageBox.Show("Please start apache and mariadb", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
             var envVars = new Dictionary<string, string>
             {
                 { "ZAMPGUIPATH", percorsi.pathBase},
@@ -560,10 +549,15 @@ namespace ZampGUI2
         }
         private void backupDatabasesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!helper.processo_in_esecuzione("httpd") || !helper.processo_in_esecuzione("mariadbd"))
+            {
+                MessageBox.Show("Please start apache and mariadb", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var envVars = new Dictionary<string, string>
             {
                 { "ZAMPGUIPATH", percorsi.pathBase},
-                { "UUID", config.Read("ImpostazioniGenerali", "uuid")},
                 { "CURRENT_VERS", config.Read("FolderName", "currentvers")},
                 { "MARIADBBIN", percorsi.mariadb_bin}
             };
@@ -572,12 +566,19 @@ namespace ZampGUI2
         }
         private void runSqlScriptsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!helper.processo_in_esecuzione("httpd") || !helper.processo_in_esecuzione("mariadbd"))
+            {
+                MessageBox.Show("Please start apache and mariadb", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             // Creazione dell'oggetto OpenFileDialog
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 // Configurazione della finestra di dialogo
-                openFileDialog.Title = "Seleziona file SQL";
-                openFileDialog.Filter = "File SQL (*.sql)|*.sql|Tutti i file (*.*)|*.*";
+                openFileDialog.Title = "Select SQL file";
+                //openFileDialog.Filter = "File SQL (*.sql)|*.sql|Tutti i file (*.*)|*.*";
+                openFileDialog.Filter = "File SQL (*.sql)|*.sql";
                 openFileDialog.Multiselect = true; // Permette la selezione di più file
                 openFileDialog.RestoreDirectory = true; // Ripristina la directory iniziale dopo la chiusura
 
@@ -595,7 +596,7 @@ namespace ZampGUI2
                         var envVars = new Dictionary<string, string>
                         {
                             { "ZAMPGUIPATH", percorsi.pathBase},
-                            { "UUID", config.Read("ImpostazioniGenerali", "uuid")},
+                            { "CURRENT_VERS", config.Read("FolderName", "currentvers")},
                             { "MARIADBBIN", percorsi.mariadb_bin}
                         };
                         bool result = helper.runZampGUI_Console("sqlscripts", envVars, fileList.ToArray());
@@ -605,28 +606,79 @@ namespace ZampGUI2
         }
         private void wordpressRestoreInstanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var envVars = new Dictionary<string, string>
+            if (!helper.processo_in_esecuzione("httpd") || !helper.processo_in_esecuzione("mariadbd"))
             {
-                { "ZAMPGUIPATH", percorsi.pathBase},
-                { "UUID", config.Read("ImpostazioniGenerali", "uuid")}
-            };
-            bool result = helper.runZampGUI_Console("wprestoreinstance", envVars, new string[] { });
+                MessageBox.Show("Please start apache and mariadb", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                // Configurazione della finestra di dialogo
+                openFileDialog.Title = "Select ZIP File";
+                //openFileDialog.Filter = "File SQL (*.sql)|*.sql|Tutti i file (*.*)|*.*";
+                openFileDialog.Filter = "ZIP File (.zip)|*.zip";
+                openFileDialog.Multiselect = true; // Permette la selezione di più file
+                openFileDialog.RestoreDirectory = true; // Ripristina la directory iniziale dopo la chiusura
+
+                // Mostra la finestra di dialogo e verifica se l'utente ha premuto OK
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Recupera i percorsi dei file selezionati
+                    string[] selectedFiles = openFileDialog.FileNames;
+
+                    // Creazione di una lista per memorizzare i file selezionati
+                    List<string> fileList = new List<string>(selectedFiles);
+
+                    if (fileList.Count() > 0)
+                    {
+                        var envVars = new Dictionary<string, string>
+                        {
+                            { "ZAMPGUIPATH", percorsi.pathBase},
+                            { "CURRENT_VERS", config.Read("FolderName", "currentvers")},
+                            { "MARIADBBIN", percorsi.mariadb_bin}
+                        };
+                        bool result = helper.runZampGUI_Console("wprestoreinstance", envVars, fileList.ToArray());
+                    }
+                }
+            }
+            //var envVars = new Dictionary<string, string>
+            //{
+            //    { "ZAMPGUIPATH", percorsi.pathBase},
+            //    { "CURRENT_VERS", config.Read("FolderName", "currentvers")},
+            //    { "MARIADBBIN", percorsi.mariadb_bin}
+            //};
+            //bool result = helper.runZampGUI_Console("wprestoreinstance", envVars, new string[] { });
         }
         private void wordpressDeleteInstanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!helper.processo_in_esecuzione("httpd") || !helper.processo_in_esecuzione("mariadbd"))
+            {
+                MessageBox.Show("Please start apache and mariadb", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var envVars = new Dictionary<string, string>
             {
                 { "ZAMPGUIPATH", percorsi.pathBase},
-                { "UUID", config.Read("ImpostazioniGenerali", "uuid")}
+                { "CURRENT_VERS", config.Read("FolderName", "currentvers")},
+                { "MARIADBBIN", percorsi.mariadb_bin}
             };
             bool result = helper.runZampGUI_Console("wpdeleteinstance", envVars, new string[] { });
         }
         private void wordpressSaveInstanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!helper.processo_in_esecuzione("httpd") || !helper.processo_in_esecuzione("mariadbd"))
+            {
+                MessageBox.Show("Please start apache and mariadb", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var envVars = new Dictionary<string, string>
             {
                 { "ZAMPGUIPATH", percorsi.pathBase},
-                { "UUID", config.Read("ImpostazioniGenerali", "uuid")}
+                { "CURRENT_VERS", config.Read("FolderName", "currentvers")},
+                { "MARIADBBIN", percorsi.mariadb_bin}
             };
             bool result = helper.runZampGUI_Console("wpsaveinstance", envVars, new string[] { });
         }
