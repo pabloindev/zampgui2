@@ -110,6 +110,9 @@ namespace ZampGUI2
             if (!percorsi.wpcli_available) //se la cartella non esiste non ha senso mostrare questa voce di menu
             {
                 wordpressScriptToolStripMenuItem.Visible = false;
+                wordpressSaveInstanceToolStripMenuItem.Visible = false;
+                wordpressRestoreInstanceToolStripMenuItem.Visible = false;
+                wordpressDeleteInstanceToolStripMenuItem.Visible = false;
                 label_wpcli.Visible = false;
             }
             if (!percorsi.composer_available) //se la cartella non esiste non ha senso mostrare questa voce di menu
@@ -264,6 +267,11 @@ namespace ZampGUI2
 
 
         #region eventi
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            inizializzaComponenti_dacodice();
+            refreshForm(true);
+        }
         private void btnStartStopMariadb_Click(object sender, EventArgs e)
         {
             gestione_processo_wrap("mariadbd");
@@ -513,11 +521,6 @@ namespace ZampGUI2
 
             // Imposta un colore personalizzato per la barra del titolo
             DarkModeHelper.SetCaptionColor(this.Handle, Color.FromArgb(32, 32, 32));
-        }
-        private void FormMain_Load(object sender, EventArgs e)
-        {
-            inizializzaComponenti_dacodice();
-            refreshForm(true);
         }
         private void timer_refreshFormProcess_Tick(object sender, EventArgs e)
         {

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZampGUI2", "ZampGUI2\ZampGU
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZampGUI2_Console", "ZampGUI2_Console\ZampGUI2_Console.csproj", "{0AA96387-F47E-4DCA-BEB5-3C69834029B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZampGUI2_Run", "ZampGUI2_Run\ZampGUI2_Run.csproj", "{FB6A5EB5-9E75-40EC-BD41-EAEF5FB9F9D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0AA96387-F47E-4DCA-BEB5-3C69834029B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AA96387-F47E-4DCA-BEB5-3C69834029B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AA96387-F47E-4DCA-BEB5-3C69834029B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB6A5EB5-9E75-40EC-BD41-EAEF5FB9F9D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB6A5EB5-9E75-40EC-BD41-EAEF5FB9F9D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB6A5EB5-9E75-40EC-BD41-EAEF5FB9F9D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB6A5EB5-9E75-40EC-BD41-EAEF5FB9F9D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
